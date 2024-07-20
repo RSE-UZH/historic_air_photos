@@ -1,5 +1,54 @@
 import os
 import pandas as pd
+import numpy as np
+
+
+def accuracy_measures(table):
+    # source accuracy, gcp residuals, cp residuals, comparison accuracy, comparison residuals
+    fields = ['Ground control accuracy [m]', 'Residuals to GCPs [m]', 'Residuals to CPs [m]',
+              'Accuracy comparison data [m]', 'Residuals to comparison [m]']
+
+    for meas in fields:
+        xyz = [f"{meas} X", f"{meas} Y", f"{meas} Z"]
+        xy_z = [f"{meas} XY", f"{meas} Z"]
+
+        # reported as 3d value
+        is_3d = ~table[f"{meas} XYZ"].isna()
+
+        # reported as x, y, z individually
+        is_xyz = (~table[xyz].isna()).all(axis=1)
+
+        # planimetric and height are reported
+        is_xy_z = ((~table[xy_z].isna()).all(axis=1) &
+                   table[[f"{meas} X", f"{meas} Y", f"{meas} XYZ"]].isna().all(axis=1))
+
+        # only the planimetric value is reported
+        is_xy = ((~table[f"{meas} XY"].isna()) &
+                 table[xyz + [f"{meas} XYZ"]].isna().all(axis=1))
+
+        # only the height is reported
+        is_z = ((~table[f"{meas} Z"].isna()) &
+                table[[f"{meas} X", f"{meas} Y", f"{meas} XY", f"{meas} XYZ"]].isna().all(axis=1))
+
+        table.loc[is_3d, f"{meas} avg"] = table.loc[is_3d, f"{meas} XYZ"]
+
+        # add x, y, z in quadrature to get 3d
+        table.loc[is_xyz, f"{meas} avg"] = np.sqrt(table.loc[is_xyz, f"{meas} X"] ** 2 +
+                                                   table.loc[is_xyz, f"{meas} Y"] ** 2 +
+                                                   table.loc[is_xyz, f"{meas} Z"] ** 2)
+
+        # add planimetric and height in quadrature to get 3d
+        table.loc[is_xy_z, f"{meas} avg"] = np.sqrt(table.loc[is_xy_z, f"{meas} XY"] ** 2 +
+                                                    table.loc[is_xy_z, f"{meas} Z"] ** 2)
+
+        # if only some values are reported, we assume that the other coordinates are equal and add in quadrature
+        table.loc[is_xy, f"{meas} avg"] = np.sqrt(2) * table.loc[is_xy, f"{meas} XY"]
+        table.loc[is_z, f"{meas} avg"] = np.sqrt(3) * table.loc[is_z, f"{meas} Z"]
+
+        # round to 3 decimal places
+        table[f"{meas} avg"] = table[f"{meas} avg"].round(3)
+
+    return table
 
 
 # load all sheets from the excel file as a dict
@@ -12,6 +61,10 @@ df_dict['publications'].drop(df_dict['publications'][blank_pubs].index, inplace=
 # remove blank rows from the datasets table
 blank_data = df_dict['datasets']['Key'].isna()
 df_dict['datasets'].drop(df_dict['datasets'][blank_data].index, inplace=True)
+
+# remove blank rows from the datasets table
+blank_acc = df_dict['accuracy']['DatasetKey'].isna()
+df_dict['accuracy'].drop(df_dict['accuracy'][blank_acc].index, inplace=True)
 
 # extract the publication key from the geographic and scientific tables
 df_dict['geographic']['Pub Key'] = df_dict['geographic']['Publication Key'].str.extract(r'\(([^()]{8})\)')
@@ -36,6 +89,10 @@ df_dict['publications'].drop(['interesting?', '.not_relevant', 'geographic', 'sc
 
 # drop the .relevant column from the geographic table
 df_dict['geographic'].drop(['.not_relevant'], axis=1, inplace=True)
+df_dict['geographic'].rename(columns={'Notes': 'Geographic Notes'}, inplace=True)
+
+# rename columns in the scientific table
+df_dict['scientific'].rename(columns={'Notes': 'Scientific Notes', 'Description': 'Study Description'}, inplace=True)
 
 # drop the helper columns from the datasets table
 df_dict['datasets'].drop(['processing', 'outputs', 'accuracy'], axis=1, inplace=True)
@@ -43,11 +100,28 @@ df_dict['datasets'].drop(['processing', 'outputs', 'accuracy'], axis=1, inplace=
 # add a pub key column to the datasets table
 df_dict['datasets']['Pub Key'] = df_dict['datasets']['Key'].str.split('.', expand=True)[0]
 
+# rename columns in the datasets table
+df_dict['datasets'].rename(columns={'Camera calib?': 'Camera Calibration',
+                                    'original media': 'Original Media',
+                                    'Notes': 'Dataset Notes'}, inplace=True)
+
+# rename columns in the processing table
+df_dict['processing'].rename(columns={'simplified geometric preprocessing': 'Geometric Pre-processing',
+                                      'simplified radiometric preprocessing': 'Radiometric Pre-processing'},
+                             inplace=True)
+
+# rename columns in the accuracy table
+df_dict['accuracy'].rename(columns={'comparison metric': 'Comparison Metric'}, inplace=True)
+
+# rename columns in the outputs table
+df_dict['outputs'].rename(columns={'note': 'Output Notes'}, inplace=True)
+
 # join the dataset columns:
 datasets_df = df_dict['datasets'].set_index('Key')\
     .join(df_dict['processing'].set_index('Key'), rsuffix='_proc')\
-    .join(df_dict['accuracy'].set_index('Key'), rsuffix='_acc')\
-    .join(df_dict['outputs'].set_index('Key'), rsuffix='_out')
+    .join(df_dict['outputs'].set_index('Key'), rsuffix='_out')\
+    .reset_index()\
+    .rename(columns={'Key': 'DatasetKey'})
 
 # join the publications, geographic, and scientific tables to the datasets_df
 pubs_df = df_dict['publications'].set_index('Key')\
@@ -55,5 +129,14 @@ pubs_df = df_dict['publications'].set_index('Key')\
     .join(df_dict['scientific'].set_index('Pub Key'), rsuffix='_sci')\
     .join(datasets_df.set_index('Pub Key'), rsuffix='_data')
 
-# save to a csv file
-pubs_df.to_csv(os.path.join('data', 'Review_Historic_Air_Photos.csv'), index_label='Key')
+# join the accuracy table to the other tables
+pubs_df = pubs_df.reset_index(names='Key')\
+    .merge(df_dict['accuracy'], left_on='DatasetKey', right_on='DatasetKey', suffixes=('', '_acc'))\
+    .set_index('Key')
+
+# get the final accuracy measurements
+pubs_df = accuracy_measures(pubs_df)
+
+# save to a csv file after replacing NaN with NA
+pubs_df.fillna('NA').sort_values('Human Key').to_csv(os.path.join('data', 'Review_Historic_Air_Photos.csv'),
+                                                     index_label='Key')

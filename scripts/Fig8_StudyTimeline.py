@@ -26,7 +26,7 @@ datasets.drop(datasets.loc[datasets['Type'] == 'Terrestrial'].index, inplace=Tru
 datasets.sort_values(['Type', 'start_date'], ascending=[True, True], inplace=True)
 
 # create list of unique key of aerial and satellite
-unique_keys = datasets['PubKey'].unique()
+unique_keys = datasets['PubKey'].unique().tolist()
 
 # get the index number for each study
 datasets['study_index'] = -1 # initialize as integer

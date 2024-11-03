@@ -60,6 +60,7 @@ for ind in range(1, datasets['study_index'].max()):
 
 ax.legend(['Aerial', 'Satellite'], loc='upper left')
 ax.set_yticks([])
+ax.set_xticks(range(1930, 2021, 10))
 ax.set_xlabel('Acquisition year')      #weight='bold'
 
 # To make the axis separated

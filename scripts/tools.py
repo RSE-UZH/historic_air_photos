@@ -4,6 +4,10 @@ import os
 import numpy as np
 
 
+aerial_color = '#108896'
+satellite_color = '#7456F1'
+
+
 def load_dataset(subset=None, relevant=True) -> dict:
     """
     Load the excel datasheet, cleaning empty/missing rows and renaming columns.
@@ -84,3 +88,14 @@ def load_dataset(subset=None, relevant=True) -> dict:
 
     return dict((sheet, dataset[sheet].reset_index(drop=True)) for sheet in subset)
 
+
+# --- Convert the DPI to microns
+# The formula to calculate DPI from microns is:
+# a) Divide the number of microns by 1,000,000
+# b) Multiply that amount by 39.37 (number of inches in a meter)
+# c) Calculate the inverse of that number.
+
+# formula --> microns per dot= 25,400 microns / DPI as There are 25,400 microns in an inch.
+def microns_to_dpi(micrometer):
+    dpi_conversion_factor = 25400  # 1 inch = 25,400 micrometers
+    return dpi_conversion_factor / micrometer if micrometer is not None and micrometer > 0 else np.nan

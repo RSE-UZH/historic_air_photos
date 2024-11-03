@@ -36,8 +36,6 @@ for ind, row in datasets.iterrows():
 # ................
 # Plot the results
 labels_legend = ['Aerial', 'Satellite']
-lineCol_aerial = '#108896'
-lineCol_satellite = '#7456F1'
 color_notspec = '1A354A'
 
 line_width = 1
@@ -51,11 +49,11 @@ fig, ax = plt.subplots(figsize=(15, 5))
 for ind in range(1, datasets['study_index'].max()):
     aerial = datasets.loc[(datasets['study_index'] == ind) & (datasets['Type'] == 'Aerial')]
     #print(selection)
-    ax.plot(aerial['start_date'], aerial['study_index'], color=lineCol_aerial,
+    ax.plot(aerial['start_date'], aerial['study_index'], color=tools.aerial_color,
             linewidth=line_width, marker='o', alpha=0.6)
 
     satellite = datasets.loc[(datasets['study_index'] == ind) & (datasets['Type'] == 'Satellite')]
-    ax.plot(satellite['start_date'], satellite['study_index'], color=lineCol_satellite,
+    ax.plot(satellite['start_date'], satellite['study_index'], color=tools.satellite_color,
             linewidth=line_width, marker='s', alpha=0.6)
 
 ax.legend(['Aerial', 'Satellite'], loc='upper left')

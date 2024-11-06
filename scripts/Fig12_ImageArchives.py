@@ -117,11 +117,12 @@ ax.set_ylabel('Archive location (country)', fontsize=fontText) # fontweight='bol
 ax.set_xlabel('Number of datasets', fontsize=fontText)
 
 # Create a custom legend with modified labels for the first three values
-custom_legend = ax.legend(handles[:4], [custom_legend_labels.get(label, label) for label in labels[:4]], loc='lower right')
+custom_legend = ax.legend(handles[:4], [custom_legend_labels.get(label, label) for label in labels[:4]],
+                          loc='lower left', bbox_to_anchor=(0.03, 0))
 sns.despine(offset=10, trim=False)  # to make the axis separated
 
 # Save the figure
-plt.savefig(Path('figures', 'BarPlot_archiveAvailability.png'),
+plt.savefig(Path('figures', 'Fig12_ArchiveAvailability.png'),
             dpi=600, bbox_inches='tight')
 
 # =====================================================================================================================

@@ -99,3 +99,26 @@ def load_dataset(subset=None, relevant=True) -> dict:
 def microns_to_dpi(micrometer):
     dpi_conversion_factor = 25400  # 1 inch = 25,400 micrometers
     return dpi_conversion_factor / micrometer if micrometer is not None and micrometer > 0 else np.nan
+
+
+def bar_text(ax, bar, label):
+    width = bar.get_width()
+    xmin, xmax = ax.get_xlim()
+
+    axwidth = xmax - xmin
+
+    xloc = bar.get_x()
+    yloc = bar.get_y() + 1.1 * (bar.get_height() / 2)
+
+    if width / axwidth < 0.1:
+        halign = 'left'
+        xloc += 1.1 * width
+        color = 'k'
+    else:
+        halign = 'right'
+        xloc += 0.98 * width
+        color = 'w'
+
+    ax.text(xloc, yloc, label, verticalalignment='center', horizontalalignment=halign, color=color)
+
+    return ax

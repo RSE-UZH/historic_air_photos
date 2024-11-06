@@ -58,10 +58,13 @@ for ind in range(1, datasets['study_index'].max()):
 
 ax.legend(['Aerial', 'Satellite'], loc='upper left')
 ax.set_yticks([])
+ax.set_xlim([1930, 2020])
 ax.set_xticks(range(1930, 2021, 10))
 ax.set_xlabel('Acquisition year')      #weight='bold'
 
 # To make the axis separated
 sns.despine(offset=10, trim=False)
+
+ax.spines['left'].set_visible(False)
 # Save the figure
-fig.savefig(Path('figures', 'Figure_timeLine_Studies.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig8_Studies_Timeline.png'), dpi=600, bbox_inches='tight')

@@ -159,8 +159,10 @@ ax1.plot([1927, 1932], [-3, 5], **kwargs)
 ax1.plot([1927, 1932], [-14, -6], **kwargs)
 
 # set subtitles
-ax1.set_title('Aerial')
-ax2.set_title('Satellite')
+# ax1.set_title('Aerial')
+# ax2.set_title('Satellite')
+ax1.annotate('a)', (0, 1.07), xycoords='axes fraction')
+ax2.annotate('b)', (0, 1.02), xycoords='axes fraction')
 
 # remove background axis
 plt.setp(ax.spines.values(), visible=False)
@@ -172,4 +174,4 @@ ax.set_xlabel('Acquisition Year', labelpad=35)
 ax.set_ylabel('GSD (m)', labelpad=35, color='black')
 
 # Save the figure
-fig.savefig(Path('figures', 'Figure_GSD_vs_Time_colorScanner_v4.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig10_GSD_vs_ScanRes.png'), dpi=600, bbox_inches='tight')

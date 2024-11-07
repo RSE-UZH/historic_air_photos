@@ -93,7 +93,7 @@ ax1, ax2, ax3, ax4 = axs.flatten()
 ax2.legend(loc='upper right')
 
 # set common axis labels
-ax.set_ylabel('No. of datasets', labelpad=30)
+ax.set_ylabel('No. of datasets', labelpad=40)
 ax.set_xlabel('Vertical accuracy (m)', labelpad=30)
 
 ax1.set_ylim(0, 100)

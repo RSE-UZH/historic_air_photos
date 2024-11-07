@@ -42,7 +42,7 @@ sns.set_theme(font_scale=1.8, style="white")
 sns.set_style('ticks')  # white style with tick marks
 
 # Create the figure and axes
-fig, ax = plt.subplots(1, 1, figsize=(15, 7))
+fig, ax = plt.subplots(1, 1, figsize=(15, 6))
 (ax1, ax2) = fig.subplots(1, 2,  sharey=True)
 
 ax1.scatter(aerial['gsd'], aerial['residuals'],
@@ -79,12 +79,13 @@ xticks_ax1 = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50]
 ax1.set_xticks(xticks_ax1)
 ax1.set_xticklabels([str(tick) for tick in xticks_ax1])
 
-xticks_ax2 = [0.5, 1, 2, 5, 10, 20, 50]
+# TODO: if using NMAD, add 0.5
+xticks_ax2 = [1, 2, 5, 10, 20, 50]
 ax2.set_xticks(xticks_ax2)
 ax2.set_xticklabels([str(tick) for tick in xticks_ax2])
 
 # Customize y-axis ticks for better readability on log scale
-yticks = [0.1, 0.5, 1, 2, 5, 10, 20, 50, 100, 200]
+yticks = [0.1, 0.5, 1, 5, 10, 50, 100]
 ax1.set_yticks(yticks)
 ax1.set_yticklabels([str(tick) for tick in yticks])
 

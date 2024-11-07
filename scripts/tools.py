@@ -1,6 +1,7 @@
 import pandas as pd
 from pathlib import Path
-import os
+from pyproj import Proj
+from shapely.geometry import shape
 import numpy as np
 
 
@@ -56,6 +57,9 @@ def load_dataset(subset=None, relevant=True) -> dict:
     dataset['geographic'].drop(['.not_relevant'], axis=1, inplace=True)
     dataset['geographic'].rename(columns={'Notes': 'Geographic Notes'}, inplace=True)
 
+    # add study areas from bounding areas if not reported
+    dataset['geographic'] = get_study_area_size(dataset['geographic'])
+
     # rename columns in the scientific table
     dataset['scientific'].rename(columns={'Notes': 'Scientific Notes', 'Description': 'Study Description'},
                                  inplace=True)
@@ -87,6 +91,65 @@ def load_dataset(subset=None, relevant=True) -> dict:
             dataset[sheet].drop(dataset[sheet].index[~dataset[sheet]['PubKey'].isin(relevant_keys)], inplace=True)
 
     return dict((sheet, dataset[sheet].reset_index(drop=True)) for sheet in subset)
+
+
+def get_study_area_size(table):
+    table.dropna(subset=['lat_min', 'lat_max', 'lon_min', 'lon_max'], how='any', inplace=True)
+
+    areas = pd.Series(index=table.index,
+                      data=[calculate_area(row) / 1e6 for _, row in table.iterrows()])
+
+    table.loc[table['Area'].isna(), 'Area'] = areas.loc[table['Area'].isna()]
+
+    return table
+
+
+def _coords(row):
+    return (tuple(row[['lon_min', 'lat_min']].values),
+            tuple(row[['lon_max', 'lat_min']].values),
+            tuple(row[['lon_max', 'lat_max']].values),
+            tuple(row[['lon_min', 'lat_max']].values))
+
+
+# based on sgillies answer on SO:
+# https://stackoverflow.com/a/4683144
+# calculates the area using an equal area projection centered on the polygon
+def calculate_area(row):
+    coords = _coords(row)
+
+    lon, lat = zip(*coords)
+
+    if max(lon) == min(lon) == max(lat) == min(lat) == 0:
+        return np.nan
+
+    else:
+        pa = Proj("+proj=aea +lat_1={} +lat_2={} +lat_0={} + lon_0={}".format(row.lat_min,
+                                                                              row.lat_max,
+                                                                              np.mean([lat]),
+                                                                              np.mean([lon])))
+        x, y = pa(lon, lat)
+        poly = {'type': 'Polygon', 'coordinates': [zip(x, y)]}
+
+        return shape(poly).area
+
+
+def expand_study_areas(geo, data):
+
+    has_dataset = geo.dropna(subset=['DatasetKey'])
+    no_dataset = geo.drop(has_dataset.index)
+
+    many_one = no_dataset.loc[no_dataset.duplicated(subset='PubKey', keep=False)].copy()
+    one_many = no_dataset.drop(many_one.index)
+
+    many_keys = many_one.merge(data, left_on='PubKey', right_on='PubKey')['Key']
+    many_one.loc[:, 'DatasetKey'] = many_keys.values
+
+    one_merge = one_many.merge(data[['PubKey', 'Key']], left_on='PubKey', right_on='PubKey')
+    one_merge['DatasetKey'] = one_merge['Key']
+
+    one_many = one_merge[geo.columns].copy()
+
+    return pd.concat([has_dataset, many_one, one_many], ignore_index=True)
 
 
 # --- Convert the DPI to microns

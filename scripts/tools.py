@@ -122,3 +122,51 @@ def bar_text(ax, bar, label):
     ax.text(xloc, yloc, label, verticalalignment='center', horizontalalignment=halign, color=color)
 
     return ax
+
+
+def accuracy_measures(table):
+    # source accuracy, gcp residuals, cp residuals, comparison accuracy, comparison residuals
+    fields = ['Ground control accuracy [m]', 'Residuals to GCPs [m]', 'Residuals to CPs [m]',
+              'Accuracy comparison data [m]', 'Residuals to comparison [m]']
+
+    for meas in fields:
+        xyz = [f"{meas} X", f"{meas} Y", f"{meas} Z"]
+        xy_z = [f"{meas} XY", f"{meas} Z"]
+
+        # reported as 3d value
+        is_3d = ~table[f"{meas} XYZ"].isna()
+
+        # reported as x, y, z individually
+        is_xyz = (~table[xyz].isna()).all(axis=1)
+
+        # planimetric and height are reported
+        is_xy_z = ((~table[xy_z].isna()).all(axis=1) &
+                   table[[f"{meas} X", f"{meas} Y", f"{meas} XYZ"]].isna().all(axis=1))
+
+        # only the planimetric value is reported
+        is_xy = ((~table[f"{meas} XY"].isna()) &
+                 table[xyz + [f"{meas} XYZ"]].isna().all(axis=1))
+
+        # only the height is reported
+        is_z = ((~table[f"{meas} Z"].isna()) &
+                table[[f"{meas} X", f"{meas} Y", f"{meas} XY", f"{meas} XYZ"]].isna().all(axis=1))
+
+        table.loc[is_3d, f"{meas} avg"] = table.loc[is_3d, f"{meas} XYZ"]
+
+        # add x, y, z in quadrature to get 3d
+        table.loc[is_xyz, f"{meas} avg"] = np.sqrt(table.loc[is_xyz, f"{meas} X"] ** 2 +
+                                                   table.loc[is_xyz, f"{meas} Y"] ** 2 +
+                                                   table.loc[is_xyz, f"{meas} Z"] ** 2)
+
+        # add planimetric and height in quadrature to get 3d
+        table.loc[is_xy_z, f"{meas} avg"] = np.sqrt(table.loc[is_xy_z, f"{meas} XY"] ** 2 +
+                                                    table.loc[is_xy_z, f"{meas} Z"] ** 2)
+
+        # if only some values are reported, we assume that the other coordinates are equal and add in quadrature
+        table.loc[is_xy, f"{meas} avg"] = np.sqrt(2) * table.loc[is_xy, f"{meas} XY"]
+        table.loc[is_z, f"{meas} avg"] = np.sqrt(3) * table.loc[is_z, f"{meas} Z"]
+
+        # round to 3 decimal places
+        table[f"{meas} avg"] = table[f"{meas} avg"].round(3)
+
+    return table

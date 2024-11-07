@@ -96,8 +96,8 @@ ax2.legend(loc='upper right')
 ax.set_ylabel('No. of datasets', labelpad=30)
 ax.set_xlabel('Vertical accuracy (m)', labelpad=30)
 
-ax1.set_ylim(0, 90)
-ax2.set_ylim(0, 90)
+ax1.set_ylim(0, 100)
+ax2.set_ylim(0, 100)
 ax3.set_ylim(0, 5)
 ax4.set_ylim(0, 5)
 

@@ -1,0 +1,55 @@
+Aerial [241] SfM
+Aerial [215] Photogrammetric
+Satellite [72] Photogrammetric
+Aerial [32] Combined
+Satellite [24] SfM
+Aerial [18] Manual
+Aerial [10] Time-SIFT
+Satellite [4] Manual
+SfM [160] 
+Photogrammetric [132] 
+Photogrammetric [52] 
+SfM [48] 
+Photogrammetric [39] 
+SfM [32] 
+Photogrammetric [31] 
+Photogrammetric [27] 
+SfM [20] 
+Combined [17] 
+Combined [13] 
+Manual [12] 
+Photogrammetric [6] 
+Manual [6] 
+SfM [5] 
+Manual [4] 
+Time-SIFT [4] 
+Time-SIFT [4] 
+Combined [2] 
+Time-SIFT [2] 
+ERDAS [84] yes
+Agisoft [69] no
+Other [60] yes
+Agisoft [56] yes
+MicMac [46] yes
+Agisoft [45] "not specified"
+ERDAS [38] "not specified"
+ERDAS [27] no
+Inpho [22] yes
+SocetSet [21] yes
+Other [19] "not specified"
+"PCI Geomatica" [16] yes
+SocetSet [15] "not specified"
+Pix4D [13] no
+"PCI Geomatica" [13] no
+Pix4D [11] "not specified"
+Other [10] no
+SocetSet [10] no
+Pix4D [8] yes
+Self [6] yes
+Self [5] no
+Self [5] "not specified"
+Inpho [5] "not specified"
+MicMac [4] no
+VirtuoZo [4] yes
+"PCI Geomatica" [2] "not specified"
+VirtuoZo [2] no

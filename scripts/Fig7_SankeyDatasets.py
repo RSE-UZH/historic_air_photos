@@ -53,7 +53,7 @@ year_count_type = counts_year_data.reindex(columns=['year', 'count', 'data_type'
 year_count_type['count'] = year_count_type['count'].apply(lambda x: f"[{str(x)}]")
 
 # export dataframe as csv and delimiter space
-fn_year_count = Path('data', 'sankey_year_dataType.csv')
+fn_year_count = Path('figures', 'data', 'sankey_year_dataType.csv')
 year_count_type.to_csv(fn_year_count, sep=" ", encoding='utf-8', index=False)
 
 # --- Count the data_type per application
@@ -66,7 +66,7 @@ data_count_field = data_count_field.sort_values(by=['count'], ascending=False)  
 data_count_field['count'] = data_count_field['count'].apply(lambda x: f"[{str(x)}]")
 
 # export dataframe as csv and delimiter space
-fn_data_count = Path('data', "sankey_dataType_application.csv")
+fn_data_count = Path('figures', 'data', "sankey_dataType_application.csv")
 data_count_field.to_csv(fn_data_count, sep=" ", encoding='utf-8', index=False)
 
 # --- Count the application per output
@@ -80,7 +80,7 @@ field_count_out = field_count_out.sort_values(by=['count'], ascending=False)  # 
 field_count_out['count'] = field_count_out['count'].apply(lambda x: f"[{str(x)}]")
 
 # export dataframe as csv and delimiter space
-fn_field_count = Path('data', "sankey_application_output.csv")
+fn_field_count = Path('figures', 'data', "sankey_application_output.csv")
 field_count_out.to_csv(fn_field_count, sep=" ", encoding='utf-8', index=False)
 
 # --- Concatenate the values into a single dataframe
@@ -88,7 +88,7 @@ result_sankey = np.concatenate([year_count_type, data_count_field, field_count_o
 result_sankey_df = pd.DataFrame(result_sankey)
 
 # save the combined dataframe to a CSV file
-fn_out = Path('data', 'sankey_allResults.csv')
+fn_out = Path('figures', 'data', 'sankey_allResults.csv')
 result_sankey_df.to_csv(fn_out, sep=" ", encoding='utf-8', index=False, header=False)
 
 # --- prepare the color for the data_type & for applications. Copy this manually in the online tool
@@ -110,5 +110,5 @@ df_color.reset_index(inplace=True)
 # add a : before the application string e.g. : Archeology
 df_color['application'] = df_color['application'].apply(lambda x: f": {str(x)}")
 # export dataframe as csv and delimiter space
-fn_color = Path('data', 'sankey_color_applications.csv')
+fn_color = Path('figures', 'data', 'sankey_color_applications.csv')
 df_color.to_csv(fn_color, sep=" ", encoding='utf-8', index=False)

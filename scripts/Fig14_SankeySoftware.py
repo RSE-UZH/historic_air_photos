@@ -80,7 +80,7 @@ result_sankey = np.concatenate([type_count_method, method_count_software, softwa
 result_sankey_df = pd.DataFrame(result_sankey)
 
 # save the combined dataframe to a CSV file
-outfilename = Path('data', "dfSankey_allResults_typeMethodSoftwareFiducial.csv")
+outfilename = Path('figures', 'data', "dfSankey_allResults_typeMethodSoftwareFiducial.csv")
 result_sankey_df.to_csv(outfilename, sep=" ", encoding='utf-8', index=False, header=False)
 
 # --- prepare the color for the data_type & for applications. Copy this manually in the online tool
@@ -99,5 +99,5 @@ df_color.reset_index(inplace=True)
 # add a : before the application string e.g. : Archeology
 df_color['application'] = df_color['application'].apply(lambda x: f": {str(x)}")
 # export dataframe as csv and delimiter space
-fn_color = Path('data', "dfSankeySoftware_color_applications.csv")
+fn_color = Path('figures', 'data', "dfSankeySoftware_color_applications.csv")
 df_color.to_csv(fn_color, sep=" ", encoding='utf-8', index=False)

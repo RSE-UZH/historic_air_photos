@@ -116,6 +116,10 @@ plt.tight_layout()
 sns.despine(offset=10, trim=False)  # To make the axis separated
 plt.subplots_adjust(hspace=2)     # add some space between subplots
 
+# add panel labels
+ax1.annotate('a)', (0, 1.02), xycoords='axes fraction')
+ax2.annotate('b)', (0, 1.02), xycoords='axes fraction')
+
 # remove background axis
 plt.setp(ax.spines.values(), visible=False)
 ax.set_xticks([])

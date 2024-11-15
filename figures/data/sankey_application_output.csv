@@ -1,19 +1,23 @@
 application count output
-Glaciology [52] 3D
-Geomorphology [46] 3D
-Methodology [37] 3D
-Archeology [10] 3D
-Forestry [9] 3D
+Glaciology [54] 3D
+Methodology [33] 3D
+Geomorphology [32] 3D
+Archeology [15] 3D
+Landuse/cover [9] 3D
 Methodology [8] 2D-ortho
-Volcanology [7] 3D
-Glaciology [5] 2D-ortho
-Landuse/cover [5] 3D
-"Urban Change" [4] 3D
+Forestry [8] 3D
+Geomorphology [7] 2D-ortho
+Volcanology [5] 3D
+Glaciology [4] 2D-ortho
 Forestry [3] 2D-ortho
-Geomorphology [2] "not reported"
-Landuse/cover [2] 2D-georef
-Landuse/cover [2] "not reported"
-Geomorphology [1] 2D-georef
-Geomorphology [1] 2D-ortho
-Ecology [1] 2D-ortho
-Methodology [1] "not reported"
+Ecology [3] 2D-ortho
+"Urban Change" [3] 3D
+Geomorphology [2] 2D-georef
+Landuse/cover [2] 2D-ortho
+Methodology [2] "not reported"
+Glaciology [1] 2D-georef
+Archeology [1] 2D-ortho
+Landuse/cover [1] 2D-georef
+Forestry [1] "not reported"
+Landuse/cover [1] "not reported"
+Archeology [1] 2D-georef

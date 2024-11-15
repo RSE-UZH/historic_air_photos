@@ -25,11 +25,11 @@ publications = publications.loc[~publications['PubKey'].isin(terr_keys)].set_ind
 outputs = outputs.loc[~outputs['PubKey'].isin(terr_keys)].set_index('PubKey')
 
 #  --- Merge the dataframes on the "Key" column
-merged = scientific.join(publications).join(outputs)
+merged = scientific.join(publications).join(outputs).reset_index()
 
 # drop repeated indices
-merged = merged[~merged.sort_values(by='Output',
-                                    ascending=False).index.duplicated(keep='first')].drop(columns=['Relevant'])
+merged = merged.loc[~merged.sort_values(by=['PubKey',
+                                            'Output'])['PubKey'].duplicated(keep='first')].drop(columns=['Relevant'])
 
 # .....................................................................
 # Prepare the data for the online sankey https://sankeymatic.com/build/

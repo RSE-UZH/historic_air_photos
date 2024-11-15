@@ -62,7 +62,7 @@ type_count_method['count'] = type_count_method['count'].apply(lambda x: f"[{str(
 # --- Count the Method per software
 method_count_software = merged.groupby(['Method', 'Software']).size().reset_index(name='count')
 # reorder the columns
-method_count_software = method_count_software.reindex(columns=['Method', 'count', 'Software_Name'])
+method_count_software = method_count_software.reindex(columns=['Method', 'count', 'Software'])
 method_count_software = method_count_software.sort_values(by=['count'], ascending=False)  # sort df by count
 # add a [] in the text
 method_count_software['count'] = method_count_software['count'].apply(lambda x: f"[{str(x)}]")

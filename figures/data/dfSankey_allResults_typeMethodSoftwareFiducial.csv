@@ -6,26 +6,26 @@ Satellite [24] SfM
 Aerial [18] Manual
 Aerial [10] Time-SIFT
 Satellite [4] Manual
-SfM [160] 
-Photogrammetric [132] 
-Photogrammetric [52] 
-SfM [48] 
-Photogrammetric [39] 
-SfM [32] 
-Photogrammetric [31] 
-Photogrammetric [27] 
-SfM [20] 
-Combined [17] 
-Combined [13] 
-Manual [12] 
-Photogrammetric [6] 
-Manual [6] 
-SfM [5] 
-Manual [4] 
-Time-SIFT [4] 
-Time-SIFT [4] 
-Combined [2] 
-Time-SIFT [2] 
+SfM [160] Agisoft
+Photogrammetric [132] ERDAS
+Photogrammetric [52] Other
+SfM [48] MicMac
+Photogrammetric [39] SocetSet
+SfM [32] Pix4D
+Photogrammetric [31] "PCI Geomatica"
+Photogrammetric [27] Inpho
+SfM [20] Other
+Combined [17] ERDAS
+Combined [13] Other
+Manual [12] Self
+Photogrammetric [6] VirtuoZo
+Manual [6] Agisoft
+SfM [5] SocetSet
+Manual [4] Other
+Time-SIFT [4] Agisoft
+Time-SIFT [4] Self
+Combined [2] SocetSet
+Time-SIFT [2] MicMac
 ERDAS [84] yes
 Agisoft [69] no
 Other [60] yes

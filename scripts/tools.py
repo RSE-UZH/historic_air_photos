@@ -233,3 +233,20 @@ def accuracy_measures(table):
         table[f"{meas} avg"] = table[f"{meas} avg"].round(3)
 
     return table
+
+
+def plot_stacked_histogram(df, _ax, _bins, cat_name, count_name, color_map, width_value=1, alpha_value=0.8):
+    # Initialize a list to hold the bottom values for stacking
+    bottom = np.zeros(len(_bins) - 1)
+
+    # Loop through each category and stack the bars
+    for category in df[cat_name].sort_values().unique():
+        subset = df[df[cat_name] == category]
+        counts, _ = np.histogram(subset[count_name], bins=_bins)
+        _ax.bar(_bins[:-1], counts, width=width_value, bottom=bottom,
+                label=category,
+                color=color_map[category],
+                edgecolor='black', alpha=alpha_value)
+        bottom += counts  # Update bottom to stack the next bar on top
+
+    return _ax

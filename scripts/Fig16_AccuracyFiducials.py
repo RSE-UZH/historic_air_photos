@@ -7,21 +7,6 @@ import seaborn as sns
 import tools
 
 
-# Function to plot a stacked histogram
-def plot_stacked_histogram(df, _ax, _bins):
-    # Initialize a list to hold the bottom values for stacking
-    bottom = np.zeros(len(_bins) - 1)
-
-    # Loop through each category and stack the bars
-    for category in df['fiducials'].sort_values().unique():
-        subset = df[df['fiducials'] == category]
-        counts, _ = np.histogram(subset['residuals'], bins=_bins)
-        _ax.bar(_bins[:-1], counts, width=width_value, bottom=bottom,
-                label=category,
-                color=color_mapping_fiducial.get(category, '#333333'),
-                edgecolor='black', alpha=alpha_value)
-        bottom += counts  # Update bottom to stack the next bar on top
-
 datasets, processing, accuracy = tools.load_dataset(subset=['datasets', 'processing', 'accuracy']).values()
 
 # remove terrestrial datasets
@@ -86,7 +71,10 @@ for (data, key, ctype, _ax) in zip([aerial, aerial, satellite, satellite],
                                    ['aerial', 'aerial', 'satellite', 'satellite'],
                                    ['point-based', 'area-based', 'point-based', 'area-based'],
                                    axs.flatten()):
-    plot_stacked_histogram(data[data['source_group'] == ctype], _ax, bins[key])
+    tools.plot_stacked_histogram(data[data['source_group'] == ctype], _ax, bins[key],
+                                 'fiducials',
+                                 'residuals',
+                                 color_mapping_fiducial)
     _ax.set_xlim(-1, 45)
 
 ax1, ax2, ax3, ax4 = axs.flatten()

@@ -1,5 +1,5 @@
-Aerial [241] SfM
-Aerial [215] Photogrammetric
+Aerial [236] SfM
+Aerial [220] Photogrammetric
 Satellite [72] Photogrammetric
 Aerial [32] Combined
 Satellite [24] SfM
@@ -10,7 +10,7 @@ SfM [160] Agisoft
 Photogrammetric [132] ERDAS
 Photogrammetric [52] Other
 SfM [48] MicMac
-Photogrammetric [39] SocetSet
+Photogrammetric [44] SocetSet
 SfM [32] Pix4D
 Photogrammetric [31] "PCI Geomatica"
 Photogrammetric [27] Inpho
@@ -20,7 +20,6 @@ Combined [13] Other
 Manual [12] Self
 Photogrammetric [6] VirtuoZo
 Manual [6] Agisoft
-SfM [5] SocetSet
 Manual [4] Other
 Time-SIFT [4] Agisoft
 Time-SIFT [4] Self

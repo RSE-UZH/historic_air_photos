@@ -34,7 +34,7 @@ sns.set_theme(font_scale=1.8, style="white")
 sns.set_style('ticks')  # white style with tick marks
 
 # Create the figure and axes
-fig, ax = plt.subplots(1, 1, figsize=(15, 5))
+fig, ax = plt.subplots(1, 1, figsize=(15, 7))
 ortho, dem = fig.subplots(1, 2)
 
 x = aerial['gsd']

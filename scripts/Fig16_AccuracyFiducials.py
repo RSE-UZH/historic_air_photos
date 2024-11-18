@@ -78,7 +78,6 @@ for (data, key, ctype, _ax) in zip([aerial, aerial, satellite, satellite],
     _ax.set_xlim(-1, 45)
 
 ax1, ax2, ax3, ax4 = axs.flatten()
-ax2.legend(loc='upper right')
 
 # set common axis labels
 ax.set_ylabel('No. of datasets', labelpad=40)
@@ -88,6 +87,9 @@ ax1.set_ylim(0, 100)
 ax2.set_ylim(0, 100)
 ax3.set_ylim(0, 5)
 ax4.set_ylim(0, 5)
+
+# add legend to panel b
+ax2.legend(title='Fiducial marks used?', title_fontsize='medium', loc='upper right')
 
 # add panel labels
 ax1.annotate('a)', (0, 1.05), xycoords='axes fraction')

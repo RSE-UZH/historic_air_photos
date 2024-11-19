@@ -25,12 +25,13 @@ def get_counts(df, ds_type):
 
 def get_top_archives(df, ds_type):
     is_ds_type = df['Type'] == ds_type
-    top_names = datasets.loc[is_ds_type, 'name'].value_counts().head(10)
+    is_specified = df['name'] != 'Not specified'
+    top_names = df.loc[is_ds_type & is_specified, 'name'].value_counts().head(10)
 
     # Find corresponding locations for each top name
     locations = []
     for name in top_names.index:
-        location = datasets.loc[is_ds_type & (datasets['name'] == name), 'location'].iloc[0]
+        location = df.loc[is_ds_type & (df['name'] == name), 'location'].iloc[0]
         locations.append(location)
 
     # Create dataframe for top 10 aerial names with country and count
@@ -43,7 +44,7 @@ def get_top_archives(df, ds_type):
 
 
 # Import excel file as pandas dataframe
-datasets, = tools.load_dataset(subset=['datasets']).values()
+datasets, archives = tools.load_dataset(subset=['datasets', 'archives']).values()
 
 # =====================================================================================================================
 #            PLOT THE NUMBER OF DATASET PER ARCHIVE LOCATION & AVAILABILITY
@@ -51,21 +52,23 @@ datasets, = tools.load_dataset(subset=['datasets']).values()
 # ....................
 # prepare the dataset
 # Create a new dataframe with only information of 'Type' and 'No. Images'.
-columns = ['Type', 'Archive Location', 'Freely Available?', 'Archive Name']
-datasets = datasets[columns].copy()
+datasets = datasets[['Type', 'Freely Available?', 'ArchiveKey']].copy()
+
+merged = datasets.merge(archives[['ArchiveKey', 'Country', 'LongName']],
+                        left_on='ArchiveKey', right_on='ArchiveKey')
 
 # rename the column name
-datasets.rename(columns={'Archive Location': 'location',
-                         'Freely Available?': 'free',
-                         'Archive Name': 'name'},
-                inplace=True)
+merged.rename(columns={'Country': 'location',
+                       'Freely Available?': 'free',
+                       'LongName': 'name'},
+              inplace=True)
 
 # fill missing values
-datasets['location'].fillna('Not reported', inplace=True)
+merged['location'].fillna('Not reported', inplace=True)
 
 # Select aerial and spy images
-aerial_counts = get_counts(datasets, 'Aerial')
-satellite_counts = get_counts(datasets, 'Satellite')
+aerial_counts = get_counts(merged, 'Aerial')
+satellite_counts = get_counts(merged, 'Satellite')
 
 # rename the satellite columns
 old = [c for c in satellite_counts if 'free' in c]
@@ -74,18 +77,19 @@ satellite_counts.rename(columns=dict(zip(old, new)), inplace=True)
 
 # ==============================================================
 # --- # Merge dataframes using the 'location' column
-merged = aerial_counts.merge(satellite_counts, left_on='location', right_on='location', how='outer').fillna(0)
-merged['total_count'] = merged.sum(axis=1, numeric_only=True)
+merged_counts = aerial_counts.merge(satellite_counts, left_on='location', right_on='location', how='outer').fillna(0)
+merged_counts['total_count'] = merged_counts.sum(axis=1, numeric_only=True)
 
 # sort by total count (ascending) and location (descending)
 # note: this is reversed here so that the plot shows the correct order
-merged = merged.sort_values(by=['total_count', 'location'], ascending=[True, False]).reset_index(drop=True)
+merged_counts = merged_counts.sort_values(by=['total_count', 'location'],
+                                          ascending=[True, False]).reset_index(drop=True)
 
 # =====================================================================================================================
 #            PLOT THE NUMBER OF DATASET PER ARCHIVE LOCATION & AVAILABILITY
 # =====================================================================================================================
 
-fontText = 24
+fontText = 18
 # Define colors with adjusted alpha values for the last three values
 col_aerial = '#108896'
 col_spy = '#7456F1'
@@ -101,9 +105,10 @@ sns.set_style('ticks')
 fig, ax = plt.subplots(figsize=(16, 9.3))
 
 # Bar plot in stack manner combined aerial and spy in the same barplot
-merged.plot(x='location', y=['free_yes', 'free_no', 'free_unclear', 'free_yes_spy', 'free_no_spy', 'free_unclear_spy'],
+merged_counts.plot(x='location', y=['free_yes', 'free_no', 'free_unclear', 'free_yes_spy',
+                                    'free_no_spy', 'free_unclear_spy'],
                kind='barh', stacked=True, width=0.8, color=colors_aerial_free_no_unclear + colors_spy_free_no_unclear,
-               fontsize=14, ax=ax) # title='No. of dataset per archive', xlabel="Number of datasets", ylabel="Archive location (Country)"
+               fontsize=14, ax=ax)
 
 # Create custom legend labels for the first three values
 # plt.legend(loc='lower right')
@@ -115,6 +120,9 @@ handles, labels = ax.get_legend_handles_labels()
 # Set axis label, and defining the font size
 ax.set_ylabel('Archive location (country)', fontsize=fontText) # fontweight='bold')
 ax.set_xlabel('Number of datasets', fontsize=fontText)
+
+# set the x-axis limits
+ax.set_xlim(0, 160)
 
 # Create a custom legend with modified labels for the first three values
 custom_legend = ax.legend(handles[:4], [custom_legend_labels.get(label, label) for label in labels[:4]],
@@ -128,8 +136,8 @@ plt.savefig(Path('figures', 'Fig12_ArchiveAvailability.png'),
 # =====================================================================================================================
 #            Find the 10 most frequent Archive names for each type (aerial and satellite)
 # =====================================================================================================================
-top_aerial = get_top_archives(datasets, 'Aerial')
+top_aerial = get_top_archives(merged, 'Aerial')
 top_aerial.to_csv(Path('data', 'top_aerial_archives.csv'), index=False)
 
-top_satellite = get_top_archives(datasets, 'Satellite')
+top_satellite = get_top_archives(merged, 'Satellite')
 top_satellite.to_csv(Path('data', 'top_satellite_archives.csv'), index=False)

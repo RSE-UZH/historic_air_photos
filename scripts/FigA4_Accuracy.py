@@ -77,7 +77,7 @@ for marker, source in zip(['o', 's'], ['point-based', 'area-based']):
                                       satellite.loc[satellite['source'] == source, 'residual'],
                                       c=tools.satellite_color, marker=marker, s=marker_size, alpha=alpha_value)
 
-labels['satellite'] = f"Point- and area-based (r={corr['satellite']:.2f}, n={ns['satellite']})"
+labels['satellite'] = f"Point- and\narea-based\n(r={corr['satellite']:.2f}, n={ns['satellite']})"
 
 
 xvals_pt = np.linspace(aerial.loc[aerial['source'] == 'point-based', 'comparison'].min(),
@@ -109,7 +109,7 @@ ax1.legend([(handles['point-based'], pt_reg), (handles['area-based'], area_reg)]
 
 ax2.legend([(sat_handles['point-based'], sat_handles['area-based'], sat_reg)],
            [labels['satellite']], numpoints=1,
-           handler_map={tuple: HandlerTuple(ndivide=None)}, loc='upper right')
+           handler_map={tuple: HandlerTuple(ndivide=None)}, loc='upper left')
 
 # Show plot
 plt.tight_layout()

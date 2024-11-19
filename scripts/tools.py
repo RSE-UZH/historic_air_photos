@@ -21,6 +21,7 @@ def load_dataset(subset=None, relevant=True) -> dict:
         - processing
         - accuracy
         - outputs
+        - archives
 
     By default, all sheets are loaded.
 
@@ -31,7 +32,7 @@ def load_dataset(subset=None, relevant=True) -> dict:
     fn_data = Path('data', 'Review_Historic_Air_Photos.xlsx')
 
     sheet_names = ['publications', 'geographic', 'scientific', 'datasets', 'processing',
-                   'accuracy', 'outputs']
+                   'accuracy', 'outputs', 'archives']
     if subset is None:
         subset = sheet_names
 
@@ -42,9 +43,10 @@ def load_dataset(subset=None, relevant=True) -> dict:
     dataset['publications'].drop(dataset['publications'][blank_pubs].index, inplace=True)
     dataset['publications'].rename(columns={'Key': 'PubKey'}, inplace=True)
 
-    # extract the publication key for all sheets except the first one
+    # extract the publication key for all sheets except the first and last ones
+    # (publications and archives)
     # and remove all rows where this is nan
-    for sheet in sheet_names[1:]:
+    for sheet in sheet_names[1:-1]:
         dataset[sheet]['PubKey'] = dataset[sheet]['Publication Key'].str.extract(r'\(([^()]{8})\)')
         dataset[sheet].dropna(subset=['PubKey'], inplace=True)
 
@@ -88,6 +90,8 @@ def load_dataset(subset=None, relevant=True) -> dict:
     if relevant:
         relevant_keys = dataset['scientific'].loc[dataset['scientific']['Relevant'], 'PubKey'].to_list()
         for sheet in sheet_names:
+            if sheet == 'archives':
+                continue
             dataset[sheet].drop(dataset[sheet].index[~dataset[sheet]['PubKey'].isin(relevant_keys)], inplace=True)
 
     return dict((sheet, dataset[sheet].reset_index(drop=True)) for sheet in subset)

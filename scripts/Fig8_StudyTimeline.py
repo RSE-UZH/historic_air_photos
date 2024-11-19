@@ -1,6 +1,5 @@
-import pandas as pd
 from pathlib import Path
-import os
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import tools
@@ -45,26 +44,39 @@ sns.set_theme(font_scale=1.5, style="white")
 sns.set_style('ticks')
 
 fig, ax = plt.subplots(figsize=(15, 5))
+
+time_ax = ax.twinx()
+
+# plot a histogram of the # of datasets by decade
+decades = np.arange(1930, 2021, 10)
+datasets['center_date'] = datasets[['start_date', 'end_date']].mean(axis=1)
+
+ax.hist(datasets['center_date'], bins=decades, alpha=0.3, color='grey', edgecolor='black')
+
+ax.set_xlim(1930, 2021)
+ax.set_ylim(0, 160)
+ax.set_ylabel('No. of datasets')
+
 # white style with tick marks
 for ind in range(1, datasets['study_index'].max()):
     aerial = datasets.loc[(datasets['study_index'] == ind) & (datasets['Type'] == 'Aerial')]
     #print(selection)
-    ax.plot(aerial['start_date'], aerial['study_index'], color=tools.aerial_color,
+    time_ax.plot(aerial['start_date'], aerial['study_index'], color=tools.aerial_color,
             linewidth=line_width, marker='o', alpha=0.6)
 
     satellite = datasets.loc[(datasets['study_index'] == ind) & (datasets['Type'] == 'Satellite')]
-    ax.plot(satellite['start_date'], satellite['study_index'], color=tools.satellite_color,
+    time_ax.plot(satellite['start_date'], satellite['study_index'], color=tools.satellite_color,
             linewidth=line_width, marker='s', alpha=0.6)
 
-ax.legend(['Aerial', 'Satellite'], loc='upper left')
-ax.set_yticks([])
-ax.set_xlim([1930, 2020])
-ax.set_xticks(range(1930, 2021, 10))
-ax.set_xlabel('Acquisition year')      #weight='bold'
+time_ax.legend(['Aerial', 'Satellite'], loc='upper left')
+time_ax.set_yticks([])
+time_ax.set_xlim([1930, 2020])
+time_ax.set_xticks(range(1930, 2021, 10))
+time_ax.set_xlabel('Acquisition year')      #weight='bold'
 
 # To make the axis separated
 sns.despine(offset=10, trim=False)
 
-ax.spines['left'].set_visible(False)
+# ax.spines['left'].set_visible(False)
 # Save the figure
 fig.savefig(Path('figures', 'Fig8_Studies_Timeline.png'), dpi=600, bbox_inches='tight')

@@ -29,7 +29,7 @@ def curved_extent(lon_min, lon_max, lat_min, lat_max):
 
 
 # read the geographic and datasets sheets from the excel file
-geographic, datasets = tools.load_dataset(subset=['geographic', 'datasets']).values()
+geographic, datasets, archives = tools.load_dataset(subset=['geographic', 'datasets', 'archives']).values()
 geographic = tools.expand_study_areas(geographic, datasets)
 
 # add geometry to the geographic table
@@ -38,23 +38,25 @@ geographic['geometry'] = geographic['geometry'].apply(Polygon)
 
 # select necessary columns
 geographic = geographic[['DatasetKey', 'geometry']].copy()
-datasets = datasets[['Key', 'PubKey', 'Type', 'Archive Location']].copy()
+datasets = datasets[['Key', 'PubKey', 'Type', 'ArchiveKey']].copy()
+archives = archives[['ArchiveKey', 'Country']].copy()
 
 # merge the tables
-merged = geographic.merge(datasets, left_on='DatasetKey', right_on='Key').drop(columns=['Key'])
+merged = geographic.merge(datasets.merge(archives, left_on='ArchiveKey', right_on='ArchiveKey'),
+                          left_on='DatasetKey', right_on='Key').drop(columns=['Key'])
 
 # count top 10 countries by archive location, ignoring duplicated datasets
-top_ten = merged.drop_duplicates(subset='DatasetKey')['Archive Location'].value_counts().head(n=10).index.to_list()
+top_ten = merged.drop_duplicates(subset='DatasetKey')['Country'].value_counts().head(n=10).index.to_list()
 
 # map other locations to "Other/Not Specified"
-merged['Archive Location'].fillna('Other/Not Specified', inplace=True)
-for location in merged['Archive Location'].unique():
+merged['Country'].fillna('Other/Not Specified', inplace=True)
+for location in merged['Country'].unique():
     if location not in top_ten:
-        merged['Archive Location'].replace({location: 'Other/Not Specified'}, inplace=True)
+        merged['Country'].replace({location: 'Other/Not Specified'}, inplace=True)
 
 top_ten.append('Other/Not Specified')
 
-study_areas = gpd.GeoDataFrame(merged[['DatasetKey', 'Type', 'Archive Location', 'geometry']])
+study_areas = gpd.GeoDataFrame(merged[['DatasetKey', 'Type', 'Country', 'geometry']])
 study_areas.set_crs(epsg=4326, inplace=True)
 
 # reproject to the robinson projection
@@ -65,11 +67,12 @@ study_areas['y'] = study_areas.to_crs("esri:54030")['geometry'].centroid.y
 robinson = ccrs.Robinson()
 
 # set the marker size for both figures
-msize = 8
+msize = 4
 
 # get a dict of colors to pair with archive names
-colors = ['#8e0152','#c51b7d','#de77ae','#f1b6da','#fde0ef',
-          '#f7f7f7','#e6f5d0','#b8e186','#7fbc41','#4d9221','#276419']
+# order is: USA, UK, France, Switzerland, Italy, Austria, Canada, Finland, Iceland, Spain, Other
+colors = ['#0072B2','#BEE8FF','#D55E00','#CC79A7','#009E73',
+          '#F0E442','#7F082A','#D0CDE6','#7FBC41','#E69F00','#808080']
 color_dict = dict(zip(top_ten, colors))
 
 fig = plt.figure(figsize=(20, 10))
@@ -123,7 +126,7 @@ ax.text(xmin + 100000, ymin + 150000, 'b)', fontsize=18)
 
 hma.text(0.02, 0.04, 'b)', fontsize=18, transform=hma.transAxes)
 
-alpha = 0.4  # set the transparency for the markers
+alpha = 0.8  # set the transparency for the markers
 
 handles = list()
 handles.append(mlines.Line2D([], [], color='black', marker='s', linestyle='None',
@@ -133,8 +136,8 @@ handles.append(mlines.Line2D([], [], color='black', marker='o', linestyle='None'
 # handles.append(mlines.Line2D([], [], color='black', marker='^', linestyle='None', fillstyle='none', markersize=12))
 
 for ind, arch_loc in enumerate(top_ten):
-    this_sat = (study_areas['Type'] == 'Satellite') & (study_areas['Archive Location'] == arch_loc)
-    this_aer = (study_areas['Type'] == 'Aerial') & (study_areas['Archive Location'] == arch_loc)
+    this_sat = (study_areas['Type'] == 'Satellite') & (study_areas['Country'] == arch_loc)
+    this_aer = (study_areas['Type'] == 'Aerial') & (study_areas['Country'] == arch_loc)
     # this_ter = (study_areas['Type'] == 'Terrestrial') & (study_areas['Archive Location'] == arch_loc)
 
     ax.plot(study_areas.loc[this_sat, 'x'], study_areas.loc[this_sat, 'y'], 's',

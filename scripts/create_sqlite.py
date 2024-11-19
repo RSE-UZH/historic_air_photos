@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlite3
 from shapely.geometry import Polygon
+import tools
 
 
 def _coords(row):
@@ -11,13 +12,7 @@ def _coords(row):
 
 
 # read the sheets from the excel spreadsheet as individual dataframes
-pubs = pd.read_excel('data/Review_Historic_Air_Photos.xlsx', sheet_name='publications')
-geog = pd.read_excel('data/Review_Historic_Air_Photos.xlsx', sheet_name='geographic')
-sci  = pd.read_excel('data/Review_Historic_Air_Photos.xlsx', sheet_name='scientific')
-data = pd.read_excel('data/Review_Historic_Air_Photos.xlsx', sheet_name='datasets')
-proc = pd.read_excel('data/Review_Historic_Air_Photos.xlsx', sheet_name='processing')
-acc  = pd.read_excel('data/Review_Historic_Air_Photos.xlsx', sheet_name='accuracy')
-outs = pd.read_excel('data/Review_Historic_Air_Photos.xlsx', sheet_name='outputs')
+pubs, geog, sci, data, proc, acc, outs, archs = tools.load_dataset(relevant=False).values()
 
 # create the database
 db_conn = sqlite3.connect('data/Historic_Air_Photos.db')
@@ -28,14 +23,14 @@ db_conn.load_extension('mod_spatialite')  # add the spatialite extension
 db_conn.execute(
     """
     CREATE TABLE publications (
-        id TEXT NOT NULL,
+        PubKey TEXT NOT NULL,
         Author TEXT NOT NULL,
         Year INTEGER NOT NULL,
         Title TEXT NOT NULL,
         PubTitle TEXT,
         DOI TEXT,
         Relevant INTEGER,
-        PRIMARY KEY(id)
+        PRIMARY KEY(PubKey)
         );
     """
 )
@@ -45,11 +40,15 @@ db_conn.execute(
     """
     CREATE TABLE geographic (
         GeoID TEXT NOT NULL,
-        Geom BLOB,
+        DatasetKey TEXT NOT NULL,
+        PubKey TEXT NOT NULL,
+        Geometry BLOB,
+        Area REAL,
+        Country TEXT,
         Notes TEXT,
-        PubID TEXT NOT NULL,
         PRIMARY KEY(GeoID),
-        FOREIGN KEY(PubID) REFERENCES publications(id)
+        FOREIGN KEY(PubKey) REFERENCES publications(PubKey),
+        FOREIGN KEY(DatasetKey) REFERENCES datasets(DatasetKey)
         );
     """
 )
@@ -63,14 +62,13 @@ db_conn.execute("SELECT CreateSpatialIndex('geographic', 'Geometry');")
 db_conn.execute(
     """
     CREATE TABLE scientific (
-        PubID TEXT NOT NULL,
+        PubKey TEXT NOT NULL,
         DataType TEXT NOT NULL,
         StudyType TEXT NOT NULL,
         Category TEXT NOT NULL,
-        Relevant INTEGER,
         Description TEXT,
         Notes TEXT,
-        FOREIGN KEY(PubID) REFERENCES publications(id)
+        FOREIGN KEY(PubKey) REFERENCES publications(PubKey)
         );
     """
 )
@@ -79,14 +77,13 @@ db_conn.execute(
 db_conn.execute(
     """
     CREATE TABLE datasets (
-        PubID TEXT NOT NULL,
-        DataID TEXT NOT NULL,
+        DatasetKey TEXT NOT NULL,
+        PubKey TEXT NOT NULL,
         Type TEXT NOT NULL,
-        Location TEXT,
+        ArchiveKey TEXT NOT NULL,
         Free TEXT,
-        ArchiveName TEXT,
-        StartYear INTEGER NOT NULL,
-        EndYear INTEGER NOT NULL,
+        StartYear INTEGER,
+        EndYear INTEGER,
         Calibration TEXT,
         FlightHeight INTEGER,
         HeightRef TEXT,
@@ -95,9 +92,10 @@ db_conn.execute(
         ScanRes REAL,
         ScanUnit TEXT,
         NumImgs INTEGER,
+        CameraType TEXT,
         Notes TEXT,
-        PRIMARY KEY(DataID),
-        FOREIGN KEY(PubID) REFERENCES publications(id)
+        PRIMARY KEY(DataKey),
+        FOREIGN KEY(PubKey) REFERENCES publications(PubKey)
         );
     """
 )
@@ -106,8 +104,8 @@ db_conn.execute(
 db_conn.execute(
     """
     CREATE TABLE processing (
-        PubID TEXT NOT NULL,
-        DataID TEXT NOT NULL,
+        DatasetKey TEXT NOT NULL,
+        PubKey TEXT NOT NULL,
         Method TEXT NOT NULL,
         Software TEXT,
         Version TEXT,
@@ -115,10 +113,12 @@ db_conn.execute(
         Fiducial TEXT,
         PreProc TEXT,
         PreProcNote TEXT,
-        WorkNote TEXT,
-        Related TEXT,
-        PRIMARY KEY(DataID),
-        FOREIGN KEY(PubID) REFERENCES publications(id)
+        Geometric TEXT,
+        Radiometric TEXT,
+        Workflow TEXT,
+        PRIMARY KEY(DatasetKey),
+        FOREIGN KEY(PubKey) REFERENCES publications(PubKey),
+        FOREIGN KEY(DatasetKey) REFERENCES datasets(PubKey)
         );
     """
 )
@@ -127,25 +127,52 @@ db_conn.execute(
 db_conn.execute(
     """
     CREATE TABLE accuracy (
-        PubID TEXT NOT NULL,
-        DataID TEXT NOT NULL,
+        AccuracyKey TEXT NOT NULL,
+        DatasetKey TEXT NOT NULL,
+        PubKey TEXT NOT NULL,
         SourceXY TEXT,
         SourceZ TEXT,
-        AccuracyXY REAL,
-        AccuracyZ REAL,
+        SourceGroup TEXT,
+        SourceAccuracyX REAL,
+        SourceAccuracyY REAL,
+        SourceAccuracyZ REAL,
+        SourceAccuracyXY REAL,
+        SourceAccuracyXYZ REAL,
+        SourceAccuracy REAL,
         NumGCPs INTEGER,
-        XYRes REAL,
-        ZRes REAL,
+        GCPResidualsX REAL,
+        GCPResidualsY REAL,
+        GCPResidualsZ REAL,
+        GCPResidualsXY REAL,
+        GCPResidualsXYZ REAL,
+        GCPResiduals REAL,
+        NumCPs INTEGER,
+        CPResidualsX REAL,
+        CPResidualsY REAL,
+        CPResidualsZ REAL,
+        CPResidualsXY REAL,
+        CPResidualsXYZ REAL,
+        CPResiduals REAL,
         Comparison TEXT,
-        CompAccXY REAL,
-        CompAccZ REAL,
-        CompResXY REAL,
-        CompResZ REAL,
+        ComparisonGroup TEXT,
+        CompAccuracyX REAL,
+        CompAccuracyY REAL,
+        CompAccuracyZ REAL,
+        CompAccuracyXY REAL,
+        CompAccuracyXYZ REAL,
+        CompAccuracy REAL,
+        CompResidualsX REAL,
+        CompResidualsY REAL,
+        CompResidualsZ REAL,
+        CompResidualsXY REAL,
+        CompResidualsXYZ REAL,
+        CompResiduals REAL,
         Metric TEXT,
-        PostProc TEXT,
-        Notes TEXT,        
-        PRIMARY KEY(DataID),
-        FOREIGN KEY(PubID) REFERENCES publications(id)
+        PostProcessing TEXT,
+        Notes TEXT,
+        PRIMARY KEY(AccuracyKey),
+        FOREIGN KEY(PubKey) REFERENCES publications(PubKey),
+        FOREIGN KEY(DatasetKey) REFERENCES publications(DatasetKey),
         );
     """
 )
@@ -154,14 +181,33 @@ db_conn.execute(
 db_conn.execute(
     """
     CREATE TABLE outputs (
-        PubID TEXT NOT NULL,
-        DataID TEXT NOT NULL,
+        DatasetKey TEXT NOT NULL,
+        PubKey TEXT NOT NULL,
         Output TEXT,
         OrthoRes REAL,
         DEMRes REAL,
         Note TEXT,
-        PRIMARY KEY(DataID),
-        FOREIGN KEY(PubID) REFERENCES publications(id)
+        PRIMARY KEY(DatasetKey),
+        FOREIGN KEY(PubKey) REFERENCES publications(PubKey),
+        FOREIGN KEY(DatasetKey) REFERENCES publications(DatasetKey),
+        );
+    """
+)
+
+# create archives table
+db_conn.execute(
+    """
+    CREATE TABLE archives (
+        ArchiveKey TEXT NOT NULL,
+        Country TEXT,
+        LongName TEXT,
+        ShortName TEXT,
+        NumImages INTEGER,
+        StartYear INTEGER,
+        EndYear INTEGER,
+        URL TEXT,
+        GeoURL TEXT,
+        PRIMARY KEY(ArchiveKey),
         );
     """
 )
@@ -242,3 +288,4 @@ outs[outs_cols].to_sql('outputs', db_conn, if_exists='append', index=False)
 
 # close the connection to the database
 db_conn.close()
+

@@ -187,7 +187,7 @@ db_conn.execute(
         Output TEXT,
         OrthoRes REAL,
         DEMRes REAL,
-        Note TEXT,
+        Notes TEXT,
         PRIMARY KEY(DatasetKey),
         FOREIGN KEY(PubKey) REFERENCES publications(PubKey),
         FOREIGN KEY(DatasetKey) REFERENCES publications(DatasetKey)
@@ -335,9 +335,9 @@ acc[acc_cols].to_sql('accuracy', db_conn, if_exists='append', index=False)
 # populate the outputs table
 outs[['PubID', 'Num']] = outs['Key'].str.split('.', expand=True)
 outs.rename(mapper={'Key': 'DatasetKey', 'DEM resolution [m]': 'DEMRes',
-                    'Orthophoto resolution [m]': 'OrthoRes', 'Output Notes': 'Note'}, axis='columns', inplace=True)
+                    'Orthophoto resolution [m]': 'OrthoRes', 'Output Notes': 'Notes'}, axis='columns', inplace=True)
 
-outs_cols = ['DatasetKey', 'PubKey', 'Output', 'OrthoRes', 'DEMRes', 'Note']
+outs_cols = ['DatasetKey', 'PubKey', 'Output', 'OrthoRes', 'DEMRes', 'Notes']
 outs[outs_cols].to_sql('outputs', db_conn, if_exists='append', index=False)
 
 # populate the archives table

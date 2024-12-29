@@ -62,23 +62,23 @@ colours = {'Glaciology': '#77AADD',
            'Methodology': '#969696'}
 
 # --------------------------------- PLOT AERIAL ORTHOIMAGES & DEM resolution
-aerial_ortho = aerial.groupby(['ortho_bins', 'Category']).size().unstack(fill_value=0)
+aerial_ortho = aerial.groupby(['ortho_bins', 'Category'], observed=False).size().unstack(fill_value=0)
 aerial_ordered_ortho = [c for c in colours.keys() if c in aerial_ortho.columns]
 
 aerial_ortho = aerial_ortho[aerial_ordered_ortho]
 
-aerial_dem = aerial.groupby(['dem_bins', 'Category']).size().unstack(fill_value=0)
+aerial_dem = aerial.groupby(['dem_bins', 'Category'], observed=False).size().unstack(fill_value=0)
 aerial_ordered_dem = [c for c in colours.keys() if c in aerial_dem.columns]
 
 aerial_dem = aerial_dem[aerial_ordered_dem]
 
 # satellite
-satellite_ortho = satellite.groupby(['ortho_bins', 'Category']).size().unstack(fill_value=0)
+satellite_ortho = satellite.groupby(['ortho_bins', 'Category'], observed=False).size().unstack(fill_value=0)
 satellite_ordered_ortho = [c for c in colours.keys() if c in satellite_ortho.columns]
 
 satellite_ortho = satellite_ortho[satellite_ordered_ortho]
 
-satellite_dem = satellite.groupby(['dem_bins', 'Category']).size().unstack(fill_value=0)
+satellite_dem = satellite.groupby(['dem_bins', 'Category'], observed=False).size().unstack(fill_value=0)
 satellite_ordered_dem = [c for c in colours.keys() if c in satellite_dem.columns]
 
 satellite_dem = satellite_dem[satellite_ordered_dem]

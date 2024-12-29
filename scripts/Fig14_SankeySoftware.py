@@ -35,11 +35,11 @@ merged = datasets.join(processing).dropna(subset=['Type'])
 
 # =========================================================================
 # Replace NaN values with a string
-merged['Software'].fillna('not defined', inplace=True)
+merged['Software'] = merged['Software'].fillna('not defined')
 
 # clean up the software names
 merged['Software'] = merged['Software'].apply(lambda s: check_software(s))
-merged['Software'].replace({'IMAGINE': 'ERDAS'}, inplace=True)
+merged['Software'] = merged['Software'].replace({'IMAGINE': 'ERDAS'})
 
 # IMAGINE -> ERDAS
 # merge smaller numbers of software into Other
@@ -50,7 +50,7 @@ top_counts = merged['Software'].value_counts().head(n=10)
 bottom = merged['Software'].value_counts()[merged['Software'].value_counts() < top_counts.values[-1]].index.to_list()
 
 # replace those names with Other
-merged['Software'].replace(dict(zip(bottom, len(bottom) * ['Other'])), inplace=True)
+merged['Software'] = merged['Software'].replace(dict(zip(bottom, len(bottom) * ['Other'])))
 
 # --- Count the Type per Method
 type_count_method = merged.groupby(['Type', 'Method']).size().reset_index(name='count')

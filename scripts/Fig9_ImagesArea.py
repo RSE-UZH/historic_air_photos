@@ -28,7 +28,7 @@ geographic = tools.expand_study_areas(geographic, datasets)
 
 # select columns needed
 datasets = datasets[['Key', 'PubKey', 'Type', 'No. Images']].copy()
-geographic = geographic[['DatasetKey', 'Area', 'Country']].copy()
+geographic = geographic[['DatasetKey', 'Area', 'Region']].copy()
 
 # merge
 merged = geographic.merge(datasets, left_on='DatasetKey', right_on='Key').drop(columns=['Key'])

@@ -38,11 +38,10 @@ merged.rename(columns={'Year': 'year', 'Data Type': 'data_type', 'Category': 'ap
 merged.sort_values(by=['year'], ascending=True, inplace=True)
 
 # Shortening the name
-merged['application'].replace({'Landuse/Landcover': 'Landuse/cover'}, inplace=True)
-merged['output'].replace({'3D (point cloud/DEM)': '3D',
-                          '2D (orthophoto)': '2D-ortho',
-                          '2D (georeferenced)': '2D-georef'},
-                         inplace=True)
+merged['application'] = merged['application'].replace({'Landuse/Landcover': 'Landuse/cover'})
+merged['output'] = merged['output'].replace({'3D (point cloud/DEM)': '3D',
+                                             '2D (orthophoto)': '2D-ortho',
+                                             '2D (georeferenced)': '2D-georef'})
 
 # --- Count the data_type per each year
 counts_year_data = merged.groupby(['year', 'data_type']).size().reset_index(name='count')

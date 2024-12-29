@@ -64,7 +64,7 @@ merged.rename(columns={'Country': 'location',
               inplace=True)
 
 # fill missing values
-merged['location'].fillna('Not reported', inplace=True)
+merged['location'] = merged['location'].fillna('Not reported')
 
 # Select aerial and spy images
 aerial_counts = get_counts(merged, 'Aerial')

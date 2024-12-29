@@ -50,7 +50,7 @@ nan_color = '#FFFFFF'  # Color to assign if scanner_res_microns is NaN
 datasets['dpi_color'] = pd.cut(datasets['scanner_res'],
                                bins=dpi_categories, labels=dpi_colors,
                                include_lowest=True, ordered=False).astype(str)
-datasets['dpi_color'].replace('nan', nan_color, inplace=True)
+datasets['dpi_color'] = datasets['dpi_color'].replace('nan', nan_color)
 
 # --- Separate the Aerial with the satellite records based on the 'Type' column
 aerial = datasets[datasets['Type'] == 'Aerial']

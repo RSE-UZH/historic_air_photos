@@ -49,10 +49,11 @@ merged = geographic.merge(datasets.merge(archives, left_on='ArchiveKey', right_o
 top_ten = merged.drop_duplicates(subset='DatasetKey')['Country'].value_counts().head(n=10).index.to_list()
 
 # map other locations to "Other/Not Specified"
-merged['Country'].fillna('Other/Not Specified', inplace=True)
+merged['Country'] = merged['Country'].fillna('Other/Not Specified')
+
 for location in merged['Country'].unique():
     if location not in top_ten:
-        merged['Country'].replace({location: 'Other/Not Specified'}, inplace=True)
+        merged['Country'] = merged['Country'].replace({location: 'Other/Not Specified'})
 
 top_ten.append('Other/Not Specified')
 

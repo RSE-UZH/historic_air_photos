@@ -71,9 +71,9 @@ robinson = ccrs.Robinson()
 msize = 4
 
 # get a dict of colors to pair with archive names
-# order is: USA, UK, France, Switzerland, Italy, Austria, Canada, Finland, Iceland, Spain, Other
-colors = ['#0072B2','#BEE8FF','#D55E00','#CC79A7','#009E73',
-          '#F0E442','#7F082A','#D0CDE6','#7FBC41','#E69F00','#808080']
+# order is: USA, UK, France, Italy, Switzerland, Poland, Canada, Austria, Spain, Finland, Other
+colors = ['#b5285f','#ad94f4','#f4970e','#09be93','#176be5',
+          '#7b40ec','#f1e000','#db4839','#7ecd14','#f09ab6','#91bccc']
 color_dict = dict(zip(top_ten, colors))
 
 fig = plt.figure(figsize=(20, 10))

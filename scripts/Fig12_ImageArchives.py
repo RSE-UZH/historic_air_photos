@@ -137,7 +137,7 @@ plt.savefig(Path('figures', 'Fig12_ArchiveAvailability.png'),
 #            Find the 10 most frequent Archive names for each type (aerial and satellite)
 # =====================================================================================================================
 top_aerial = get_top_archives(merged, 'Aerial')
-top_aerial.to_csv(Path('data', 'top_aerial_archives.csv'), index=False)
+top_aerial.to_csv(Path('figures','data', 'top_aerial_archives.csv'), index=False)
 
 top_satellite = get_top_archives(merged, 'Satellite')
-top_satellite.to_csv(Path('data', 'top_satellite_archives.csv'), index=False)
+top_satellite.to_csv(Path('figures','data', 'top_satellite_archives.csv'), index=False)

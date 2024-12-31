@@ -31,22 +31,22 @@
 2018 [4] Satellite
 2019 [12] Aerial
 2019 [2] Mix
-2019 [2] Satellite
+2019 [3] Satellite
 2020 [16] Aerial
 2020 [2] Mix
 2020 [5] Satellite
 2021 [12] Aerial
 2021 [1] Mix
-2021 [3] Satellite
+2021 [4] Satellite
 2022 [9] Aerial
 2022 [2] Satellite
 2023 [14] Aerial
 2023 [2] Mix
 2023 [4] Satellite
-Aerial [36] Geomorphology
+Aerial [35] Geomorphology
 Aerial [33] Methodology
-Aerial [27] Glaciology
-Satellite [24] Glaciology
+Aerial [28] Glaciology
+Satellite [26] Glaciology
 Aerial [13] Archeology
 Aerial [12] Landuse/cover
 Aerial [10] Forestry
@@ -55,30 +55,30 @@ Mix [8] Glaciology
 Aerial [5] Volcanology
 Satellite [5] Geomorphology
 Satellite [3] Archeology
-Satellite [3] Ecology
 Aerial [3] "Urban Change"
+Satellite [3] Ecology
 Satellite [2] Forestry
-Satellite [1] Landuse/cover
 Mix [1] Archeology
-Glaciology [54] 3D
+Satellite [1] Landuse/cover
+Glaciology [56] 3D
 Methodology [33] 3D
 Geomorphology [32] 3D
 Archeology [15] 3D
 Landuse/cover [9] 3D
-Methodology [8] 2D-ortho
 Forestry [8] 3D
-Geomorphology [7] 2D-ortho
+Methodology [8] 2D-ortho
+Geomorphology [6] 2D-ortho
 Volcanology [5] 3D
-Glaciology [4] 2D-ortho
-Forestry [3] 2D-ortho
-Ecology [3] 2D-ortho
+Glaciology [5] 2D-ortho
 "Urban Change" [3] 3D
-Geomorphology [2] 2D-georef
+Ecology [3] 2D-ortho
+Forestry [3] 2D-ortho
 Landuse/cover [2] 2D-ortho
 Methodology [2] "not reported"
-Glaciology [1] 2D-georef
+Geomorphology [2] 2D-georef
+Archeology [1] 2D-georef
 Archeology [1] 2D-ortho
 Landuse/cover [1] 2D-georef
+Glaciology [1] 2D-georef
 Forestry [1] "not reported"
 Landuse/cover [1] "not reported"
-Archeology [1] 2D-georef

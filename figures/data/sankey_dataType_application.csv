@@ -1,8 +1,8 @@
 data_type count application
-Aerial [36] Geomorphology
+Aerial [35] Geomorphology
 Aerial [33] Methodology
-Aerial [27] Glaciology
-Satellite [24] Glaciology
+Aerial [28] Glaciology
+Satellite [26] Glaciology
 Aerial [13] Archeology
 Aerial [12] Landuse/cover
 Aerial [10] Forestry
@@ -11,8 +11,8 @@ Mix [8] Glaciology
 Aerial [5] Volcanology
 Satellite [5] Geomorphology
 Satellite [3] Archeology
-Satellite [3] Ecology
 Aerial [3] "Urban Change"
+Satellite [3] Ecology
 Satellite [2] Forestry
-Satellite [1] Landuse/cover
 Mix [1] Archeology
+Satellite [1] Landuse/cover

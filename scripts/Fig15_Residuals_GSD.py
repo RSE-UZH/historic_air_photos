@@ -108,4 +108,4 @@ ax.set_yticks([])
 
 # TODO: why does this output look different?
 # Save the figure
-fig.savefig(Path('figures', 'Fig17_Residuals_GSD.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig15_Residuals_GSD.png'), dpi=600, bbox_inches='tight')

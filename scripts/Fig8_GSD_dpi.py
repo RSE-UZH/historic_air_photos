@@ -174,4 +174,4 @@ ax.set_xlabel('Acquisition Year', labelpad=35)
 ax.set_ylabel('GSD (m)', labelpad=35, color='black')
 
 # Save the figure
-fig.savefig(Path('figures', 'Fig10_GSD_vs_ScanRes.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig8_GSD_vs_ScanRes.png'), dpi=600, bbox_inches='tight')

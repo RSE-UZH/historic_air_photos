@@ -126,4 +126,4 @@ ax.set_xticks([])
 ax.set_yticks([])
 
 # Save the figure
-fig.savefig(Path('figures', 'FigA4_AccuracyDEM_Comparison.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'FigA12_AccuracyDEM_Comparison.png'), dpi=600, bbox_inches='tight')

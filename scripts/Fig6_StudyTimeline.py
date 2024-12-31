@@ -79,4 +79,4 @@ sns.despine(offset=10, trim=False)
 
 # ax.spines['left'].set_visible(False)
 # Save the figure
-fig.savefig(Path('figures', 'Fig8_Studies_Timeline.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig6_Studies_Timeline.png'), dpi=600, bbox_inches='tight')

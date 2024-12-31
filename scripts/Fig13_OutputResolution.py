@@ -137,4 +137,4 @@ ax2.legend(fontsize='x-small', bbox_to_anchor=(0.6, 0.3), loc='lower left')
 fig.tight_layout()
 
 # save the figure
-fig.savefig(Path('figures', 'Fig15_OutputResolution.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig13_OutputResolution.png'), dpi=600, bbox_inches='tight')

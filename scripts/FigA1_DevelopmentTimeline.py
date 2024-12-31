@@ -99,4 +99,4 @@ ax.set_yticks([])
 ax.set_xticks([1860, 1900, 1940, 1980])
 
 # save the figure
-fig.savefig(Path('figures', 'Fig1_DevelopmentTimeline.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'FigA1_DevelopmentTimeline.png'), dpi=600, bbox_inches='tight')

@@ -16,14 +16,14 @@ def plot_phase(_ax, _phase, _n):
                                          color='0.5', alpha=0.4)
         _ax.add_artist(p)
 
-        _ax.annotate(_phase, (phases[_phase][0], -1), ha='left', va='bottom',
+        _ax.annotate(_phase, (phases[_phase][0], -1), ha='left', va='bottom', size='medium', weight='bold',
                      xytext=(offset, offset), textcoords='offset points')
     else:
         p = matplotlib.patches.Rectangle((phases[_phase][0], 0), width=width, height=1,
                                          color='0.5', alpha=0.4)
 
         _ax.add_artist(p)
-        _ax.annotate(_phase, (phases[_phase][0], 1), ha='left', va='top',
+        _ax.annotate(_phase, (phases[_phase][0], 1), ha='left', va='top', size='medium', weight='bold',
                      xytext=(offset, -offset), textcoords='offset points')
 
     for yind, d in enumerate(developments[_phase]):
@@ -74,9 +74,14 @@ developments = {'Phase I': [(1858, 'First aerial photo from balloon'),
                             (2000, 'Digital aerial camera')]
                 }
 
+#
+sns.set_theme(style="white")
+sns.set_style('ticks')
+
 fig, ax = plt.subplots(1, 1, figsize=(16, 7))
 
 # plot the timeline
+
 ax.plot([1850, 2010], [0, 0], 'k', linewidth=2)
 
 for n, phase in enumerate(phases.keys()):

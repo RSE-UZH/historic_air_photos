@@ -10,12 +10,15 @@ def check_software(s):
     software_names = ['ERDAS', 'Pix4D', 'PhotoMod', 'Agisoft', 'SocetSet', 'MicMac', 'SURE',
                       'Self', 'IMAGINE', 'Inpho', 'VirtuoZo', 'VisualSFM', 'PCI Geomatica',
                       'Corona Stereo Pipeline (CoSP)', 'Remote Sensing Software Package Graz (RSG)',
-                      'HEXIMAP', 'Ames Stereo Pipeline (ASP)']
+                      'HEXIMAP', 'ASP (Ames Stereo Pipeline)', 'ArcGIS']
 
-    for name in software_names:
-        if name.lower() in s.lower():
-            return name
-    return 'Other'
+    if ',' in s:
+        return 'Multiple'
+    else:
+        for name in software_names:
+            if name.lower() in s.lower() or s.lower() in name.lower():
+                return name
+        return 'Other'
 
 
 # ....................

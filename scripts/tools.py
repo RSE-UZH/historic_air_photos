@@ -67,7 +67,7 @@ def load_dataset(subset=None, relevant=True) -> dict:
                                  inplace=True)
 
     # make the relevant column a boolean
-    dataset['scientific']['Relevant'].replace({'no': False, 'yes': True}, inplace=True)
+    dataset['scientific']['Relevant'] = dataset['scientific']['Relevant'].map({'no': False, 'yes': True})
 
     # drop the helper columns from the datasets table
     dataset['datasets'].drop(['processing', 'outputs', 'accuracy'], axis=1, inplace=True)

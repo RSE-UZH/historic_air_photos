@@ -1,54 +1,55 @@
 Aerial [236] SfM
 Aerial [220] Photogrammetric
-Satellite [72] Photogrammetric
+Satellite [85] Photogrammetric
 Aerial [32] Combined
-Satellite [24] SfM
+Satellite [25] SfM
 Aerial [18] Manual
 Aerial [10] Time-SIFT
 Satellite [4] Manual
 SfM [160] Agisoft
-Photogrammetric [132] ERDAS
-Photogrammetric [52] Other
-SfM [48] MicMac
+Photogrammetric [122] ERDAS
+Photogrammetric [48] Other
+SfM [47] MicMac
 Photogrammetric [44] SocetSet
-SfM [32] Pix4D
+Combined [32] Multiple
 Photogrammetric [31] "PCI Geomatica"
-Photogrammetric [27] Inpho
-SfM [20] Other
-Combined [17] ERDAS
-Combined [13] Other
-Manual [12] Self
-Photogrammetric [6] VirtuoZo
+Photogrammetric [24] Inpho
+SfM [24] Pix4D
+Photogrammetric [23] Multiple
+SfM [21] Other
+Photogrammetric [13] "Remote Sensing Software Package Graz (RSG)"
+Manual [13] Other
+SfM [9] Multiple
 Manual [6] Agisoft
-Manual [4] Other
+Time-SIFT [4] Multiple
 Time-SIFT [4] Agisoft
-Time-SIFT [4] Self
-Combined [2] SocetSet
+Manual [3] Multiple
 Time-SIFT [2] MicMac
-ERDAS [84] yes
+ERDAS [79] yes
 Agisoft [69] no
-Other [60] yes
 Agisoft [56] yes
-MicMac [46] yes
+Other [50] yes
+MicMac [45] yes
 Agisoft [45] "not specified"
-ERDAS [38] "not specified"
-ERDAS [27] no
-Inpho [22] yes
+Multiple [34] yes
+ERDAS [25] "not specified"
+Multiple [22] no
 SocetSet [21] yes
-Other [19] "not specified"
+Other [20] "not specified"
+Inpho [19] yes
+ERDAS [18] no
 "PCI Geomatica" [16] yes
-SocetSet [15] "not specified"
-Pix4D [13] no
+Multiple [15] "not specified"
 "PCI Geomatica" [13] no
+SocetSet [13] "not specified"
+Other [12] no
 Pix4D [11] "not specified"
-Other [10] no
 SocetSet [10] no
 Pix4D [8] yes
-Self [6] yes
-Self [5] no
-Self [5] "not specified"
+"Remote Sensing Software Package Graz (RSG)" [8] no
+Pix4D [5] no
 Inpho [5] "not specified"
 MicMac [4] no
-VirtuoZo [4] yes
+"Remote Sensing Software Package Graz (RSG)" [3] yes
 "PCI Geomatica" [2] "not specified"
-VirtuoZo [2] no
+"Remote Sensing Software Package Graz (RSG)" [2] "not specified"

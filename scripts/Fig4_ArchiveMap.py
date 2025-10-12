@@ -163,4 +163,4 @@ for ind, arch_loc in enumerate(top_ten):
 labels = ['Satellite', 'Aerial'] + top_ten
 
 ax.legend(handles, labels, fontsize=16, loc=(-0.055, 0.45), frameon=True, framealpha=1)
-fig.savefig(Path('figures', 'Fig9_ArchiveMap.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig4_ArchiveMap.png'), dpi=600, bbox_inches='tight')

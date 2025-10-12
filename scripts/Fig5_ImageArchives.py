@@ -130,7 +130,7 @@ custom_legend = ax.legend(handles[:4], [custom_legend_labels.get(label, label) f
 sns.despine(offset=10, trim=False)  # to make the axis separated
 
 # Save the figure
-plt.savefig(Path('figures', 'Fig10_ArchiveAvailability.png'),
+plt.savefig(Path('figures', 'Fig5_ArchiveAvailability.png'),
             dpi=600, bbox_inches='tight')
 
 # =====================================================================================================================

@@ -1,15 +1,20 @@
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
 import seaborn as sns
 import tools
 
 
 def add_regression_lines(_ax, x_data, styles):
     x_vals = np.linspace(min(x_data), max(x_data), 100)
+    handles = []
     for factor, (color, style) in styles.items():
         y_vals = factor * x_vals
-        _ax.plot(x_vals, y_vals, linestyle=style, color=color, label=f'{factor}x GSD', linewidth=1.5)
+        h, = _ax.plot(x_vals, y_vals, linestyle=style, color=color, label=f'{factor}x GSD', linewidth=1.5)
+        handles.append(h)
+
+    return(handles)
 
 # ....................................................
 # Import excel file as pandas dataframe using datetime
@@ -20,14 +25,19 @@ accuracy = tools.accuracy_measures(accuracy)
 
 # --- SELECT RELEVANT COLUMNS
 datasets = datasets[['Key', 'Type', 'GSD [m]']].copy()
-accuracy = accuracy[['DatasetKey', 'Residuals to comparison [m] avg', 'Comparison Metric']].copy()
+datasets.drop(datasets.loc[datasets['Type'] == 'Terrestrial'].index, inplace=True)
+
+accuracy = accuracy[['DatasetKey', 'Residuals to comparison [m] Z',
+                     'Residuals to comparison [m] XY', 'Comparison Metric']].copy()
 
 datasets.rename(columns={'GSD [m]': 'gsd'}, inplace=True)
-accuracy.rename(columns={'Residuals to comparison [m] avg': 'residuals', 'Comparison Metric': 'metric'}, inplace=True)
+accuracy.rename(columns={'Residuals to comparison [m] Z': 'residuals',
+                         'Residuals to comparison [m] XY': 'planimetric',
+                         'Comparison Metric': 'metric'}, inplace=True)
 
 merged = datasets.merge(accuracy, left_on='Key', right_on='DatasetKey', how='left')
 merged.drop(merged.loc[~merged['metric'].isin(['RMSE', 'Standard Deviation'])].index, inplace=True)
-merged.dropna(subset=['gsd', 'residuals'], inplace=True)
+merged = merged.dropna(subset='gsd').dropna(how='all', subset=['residuals', 'planimetric'])
 
 (_, aerial), (_, satellite) = merged.groupby('Type')
 # ======================================================================================================================
@@ -45,8 +55,14 @@ sns.set_style('ticks')  # white style with tick marks
 fig, ax = plt.subplots(1, 1, figsize=(15, 6))
 (ax1, ax2) = fig.subplots(1, 2,  sharey=True)
 
+ax1.scatter(aerial['gsd'], aerial['planimetric'], marker='s', ec='k',
+            c=tools.aerial_color, s=marker_size)
+
 ax1.scatter(aerial['gsd'], aerial['residuals'],
             c=tools.aerial_color, s=marker_size, alpha=alpha_value)
+
+ax2.scatter(satellite['gsd'], satellite['planimetric'], marker='s', ec='k',
+            c=tools.satellite_color, s=marker_size)
 
 ax2.scatter(satellite['gsd'], satellite['residuals'],
             c=tools.satellite_color, s=marker_size, alpha=alpha_value)
@@ -59,7 +75,7 @@ ax2.set_yscale('log')
 
 # Set labels and titles if needed
 ax.set_xlabel('GSD (m)', labelpad=35)
-ax1.set_ylabel('Vertical accuracy (m)')
+ax1.set_ylabel('Accuracy (m)')
 
 # Define line styles for 1x, 2x, 4x GSD lines
 line_styles = {
@@ -69,10 +85,17 @@ line_styles = {
 
 # Add regression lines to both subplots
 add_regression_lines(ax1, aerial['gsd'], line_styles)
-add_regression_lines(ax2, satellite['gsd'], line_styles)
+handles = add_regression_lines(ax2, satellite['gsd'], line_styles)
 
 # Add legends
-ax2.legend(fontsize='small', loc='lower right')
+# add marker shape to the legend
+square = mlines.Line2D([], [], markerfacecolor='none', markeredgecolor='k',
+                       marker='s', markersize=10, linestyle='', label='Planimetric')
+
+circ = mlines.Line2D([], [], markerfacecolor='none', markeredgecolor='k',
+                     marker='o', markersize=10, linestyle='', label='Vertical')
+
+ax2.legend(handles=[square, circ] + handles, fontsize='small', loc='lower right')
 
 # Customize x-axis ticks for better readability on log scale
 xticks_ax1 = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50]

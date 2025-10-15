@@ -131,7 +131,7 @@ folium.TileLayer('openstreetmap', name='OpenStreetMap').add_to(mymap)
 
 folium.TileLayer(
     tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attr='ESRI',
+    attr='Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community',
     name='Esri World Imagery'
 ).add_to(mymap)
 

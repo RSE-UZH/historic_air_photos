@@ -124,8 +124,16 @@ gradient = dict(zip(vals, hexs))
 heatmap = HeatMap(data, gradient=gradient, name='Density', show=True)
 
 # create the map, and add cartodb positron and openstreetmap as options
-mymap = folium.Map(location=[0, 0], zoom_start=2, tiles='cartodbpositron')
-folium.TileLayer('openstreetmap').add_to(mymap)
+mymap = folium.Map(location=[0, 0], zoom_start=2, tiles=None, world_copy_jump=True)
+
+folium.TileLayer('cartodbpositron', name='CartoDB Positron').add_to(mymap)
+folium.TileLayer('openstreetmap', name='OpenStreetMap').add_to(mymap)
+
+folium.TileLayer(
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attr='ESRI',
+    name='Esri World Imagery'
+).add_to(mymap)
 
 # create the two grouped categories, using Category and Data Type. Show Category by default
 fg_cat, cat_grps = grouped_categories(merged, 'Category', category_colors, popup_args)

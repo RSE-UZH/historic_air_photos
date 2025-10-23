@@ -55,13 +55,13 @@ sns.set_style('ticks')  # white style with tick marks
 fig, ax = plt.subplots(1, 1, figsize=(15, 6))
 (ax1, ax2) = fig.subplots(1, 2,  sharey=True)
 
-ax1.scatter(aerial['gsd'], aerial['planimetric'], marker='s', ec='k',
+ax1.scatter(aerial['gsd'], aerial['planimetric'], marker='P', ec='k',
             c=tools.aerial_color, s=marker_size)
 
 ax1.scatter(aerial['gsd'], aerial['residuals'],
             c=tools.aerial_color, s=marker_size, alpha=alpha_value)
 
-ax2.scatter(satellite['gsd'], satellite['planimetric'], marker='s', ec='k',
+ax2.scatter(satellite['gsd'], satellite['planimetric'], marker='P', ec='k',
             c=tools.satellite_color, s=marker_size)
 
 ax2.scatter(satellite['gsd'], satellite['residuals'],
@@ -89,13 +89,13 @@ handles = add_regression_lines(ax2, satellite['gsd'], line_styles)
 
 # Add legends
 # add marker shape to the legend
-square = mlines.Line2D([], [], markerfacecolor='none', markeredgecolor='k',
-                       marker='s', markersize=10, linestyle='', label='Planimetric')
+cross = mlines.Line2D([], [], markerfacecolor='none', markeredgecolor='k',
+                       marker='P', markersize=10, linestyle='', label='Planimetric')
 
 circ = mlines.Line2D([], [], markerfacecolor='none', markeredgecolor='k',
                      marker='o', markersize=10, linestyle='', label='Vertical')
 
-ax2.legend(handles=[square, circ] + handles, fontsize='small', loc='lower right')
+ax2.legend(handles=[cross, circ] + handles, fontsize='small', loc='lower right')
 
 # Customize x-axis ticks for better readability on log scale
 xticks_ax1 = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50]

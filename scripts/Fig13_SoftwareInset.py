@@ -39,7 +39,7 @@ counts = pd.concat([pcounts.reset_index(), scounts.reset_index()], ignore_index=
 sns.set_theme(font_scale=1.8, style='white')
 sns.set_style('ticks')  # white style with tick marks
 
-fig, ax = plt.subplots(1, 1, figsize=(8, 8))
+fig, ax = plt.subplots(1, 1, figsize=(5, 8))
 ax = sns.barplot(data=counts, x='count', y='Year',
                  hue='method', palette=['#E497A7', '#A9BEED'], orient='horizontal',
                  dodge=False, native_scale=True, ax=ax, saturation=1)
@@ -57,7 +57,7 @@ ax.set_xticklabels([15, 10, 5, 0, 5, 10, 15])
 ax.set_xlim(-15, 15)
 
 # re-make the legend with no title
-ax.legend(fontsize=16)
+ax.legend(fontsize=16, bbox_to_anchor=(0.5, 0.12))
 
 sns.despine(offset=10, trim=False)
 

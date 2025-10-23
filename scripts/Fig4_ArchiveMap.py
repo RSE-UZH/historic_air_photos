@@ -131,9 +131,9 @@ alpha = 0.8  # set the transparency for the markers
 
 handles = list()
 handles.append(mlines.Line2D([], [], color='black', marker='s', linestyle='None',
-                             fillstyle='none', markersize=msize))
+                             fillstyle='none', markersize=2.5*msize))
 handles.append(mlines.Line2D([], [], color='black', marker='o', linestyle='None',
-                             fillstyle='none', markersize=msize))
+                             fillstyle='none', markersize=2.5*msize))
 # handles.append(mlines.Line2D([], [], color='black', marker='^', linestyle='None', fillstyle='none', markersize=12))
 
 for ind, arch_loc in enumerate(top_ten):

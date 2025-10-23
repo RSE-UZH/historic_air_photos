@@ -75,7 +75,7 @@ ax2.set_yscale('log')
 
 # Set labels and titles if needed
 ax.set_xlabel('GSD (m)', labelpad=35)
-ax1.set_ylabel('Accuracy (m)')
+ax1.set_ylabel('Reported Accuracy (m)')
 
 # Define line styles for 1x, 2x, 4x GSD lines
 line_styles = {

@@ -179,4 +179,4 @@ _ax.set_xticks([])
 _ax.set_yticks([])
 
 # Save the figure
-fig.savefig(Path('figures', 'Fig8_TimelineArea.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig9_TimelineArea.png'), dpi=600, bbox_inches='tight')

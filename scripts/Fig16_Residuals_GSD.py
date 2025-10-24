@@ -102,7 +102,6 @@ xticks_ax1 = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50]
 ax1.set_xticks(xticks_ax1)
 ax1.set_xticklabels([str(tick) for tick in xticks_ax1])
 
-# TODO: if using NMAD, add 0.5
 xticks_ax2 = [1, 2, 5, 10, 20, 50]
 ax2.set_xticks(xticks_ax2)
 ax2.set_xticklabels([str(tick) for tick in xticks_ax2])
@@ -129,6 +128,5 @@ plt.setp(ax.spines.values(), visible=False)
 ax.set_xticks([])
 ax.set_yticks([])
 
-# TODO: why does this output look different?
 # Save the figure
-fig.savefig(Path('figures', 'Fig15_Residuals_GSD.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig16_Residuals_GSD.png'), dpi=600, bbox_inches='tight')

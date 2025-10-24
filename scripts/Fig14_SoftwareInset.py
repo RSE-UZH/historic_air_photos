@@ -62,4 +62,4 @@ ax.legend(fontsize=16, bbox_to_anchor=(0.5, 0.12))
 sns.despine(offset=10, trim=False)
 
 # save the figure
-fig.savefig(Path('figures', 'Fig13_SoftwareInset.png'), dpi=200, bbox_inches='tight')
+fig.savefig(Path('figures', 'Fig14_SoftwareInset.png'), dpi=200, bbox_inches='tight')

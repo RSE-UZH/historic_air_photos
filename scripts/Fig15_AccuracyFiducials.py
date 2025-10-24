@@ -107,4 +107,4 @@ plt.setp(ax.spines.values(), visible=False)
 ax.set_xticks([])
 ax.set_yticks([])
 
-plt.savefig(Path('figures', 'Fig14_AccuracyFiducials.png'), dpi=600, bbox_inches='tight')
+plt.savefig(Path('figures', 'Fig15_AccuracyFiducials.png'), dpi=600, bbox_inches='tight')

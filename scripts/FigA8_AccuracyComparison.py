@@ -167,4 +167,4 @@ ax.set_xticks([])
 ax.set_yticks([])
 
 # save the figure
-fig.savefig(Path('figures', 'FigA11_AccuracyComparison.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'FigA8_AccuracyComparison.png'), dpi=600, bbox_inches='tight')

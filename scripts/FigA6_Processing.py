@@ -218,4 +218,4 @@ sns.despine(offset=10, trim=False)      # To make the axis separated
 
 fig.tight_layout()
 # save the figure
-fig.savefig(Path('figures', 'Fig11_ProcessingComparison.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'FigA6_ProcessingComparison.png'), dpi=600, bbox_inches='tight')

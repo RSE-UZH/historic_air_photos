@@ -85,4 +85,4 @@ ax.set_xticks([])
 ax.set_yticks([])
 
 # save the figure
-fig.savefig(Path('figures', 'FigA10_ResolutionGSD.png'), dpi=600, bbox_inches='tight')
+fig.savefig(Path('figures', 'FigA7_ResolutionGSD.png'), dpi=600, bbox_inches='tight')

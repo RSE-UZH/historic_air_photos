@@ -4,7 +4,7 @@ import folium
 from folium.features import GeoJsonTooltip, GeoJsonPopup
 from folium.plugins import HeatMap, GroupedLayerControl
 import branca.colormap as cmp
-from scripts import tools
+import tools
 
 
 def grouped_categories(df: gpd.GeoDataFrame, name: str,

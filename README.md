@@ -59,6 +59,14 @@ Each table contains the following information:
 - **outputs** - the processed outputs of each dataset, including what outputs were produced and DEM/Orthophoto resolution
 - **archives** - the archives that provided the images used in each study, including the name and URL (if available)
 
-Scripts for generating the figures and tables are contained in the `scripts/` folder, and the individual figures are
-found in the `figures/` folder. To run the scripts, use the provided `environment.yml` file to create a conda environment
-with the necessary python packages.
+Scripts for generating the figures and tables are contained in the `scripts/` folder (`scripts/Fig*.py`), and the individual 
+figures and data files are found in the `figures/` folder. To run the scripts, use the provided `environment.yml` file 
+to create a conda environment with the necessary python packages.
+
+The (non-figure) scripts in the folder are:
+
+- `tools.py` - contains helper functions used by many of the other scripts, including for loading the data files
+- `create_sqlite.py` - converts the .xlsx data files into a SQLite database
+- `make_folium_map.py` - creates the interactive map shown in the frame above (or at `data/interactive_map.html`)
+- `check_accuracy_reporting.py` - prints a number of statistics about the percentage of studies/datasets that have
+  various accuracy measures/metrics

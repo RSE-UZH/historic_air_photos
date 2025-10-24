@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 import seaborn as sns
 import matplotlib.pyplot as plt
-from scripts import tools
+import tools
 
 
 publications, datasets, processing = tools.load_dataset(subset=['publications', 'datasets', 'processing']).values()

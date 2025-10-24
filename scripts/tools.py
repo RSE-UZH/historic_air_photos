@@ -3,13 +3,14 @@ from pathlib import Path
 from pyproj import Proj
 from shapely.geometry import shape
 import numpy as np
+from typing import Union
 
 
 aerial_color = '#108896'
 satellite_color = '#7456F1'
 
 
-def load_dataset(subset=None, relevant=True) -> dict:
+def load_dataset(subset: Union[None, list]=None, relevant: bool=True) -> dict:
     """
     Load the excel datasheet, cleaning empty/missing rows and renaming columns.
 
@@ -27,7 +28,7 @@ def load_dataset(subset=None, relevant=True) -> dict:
 
     :param subset: the subset of sheets to load (default: All)
     :param bool relevant: drop non-relevant studies from the dataset on loading (default: True)
-    :return:
+    :return: a dict of pandas dataframes corresponding to the requested tables
     """
     fn_data = Path('data', 'Review_Historic_Air_Photos.xlsx')
 
@@ -97,7 +98,15 @@ def load_dataset(subset=None, relevant=True) -> dict:
     return dict((sheet, dataset[sheet].reset_index(drop=True)) for sheet in subset)
 
 
-def get_study_area_size(table):
+def get_study_area_size(table: pd.DataFrame) -> pd.DataFrame:
+    """
+    Fill study area sizes by calculating the area (in sq. km) from the bounding box if
+    the value isn't already reported.
+
+    :param table: the table to fill areas in. Should have 'Area',
+        'lat_min', 'lat_max', 'lon_min', 'lon_max' columns.
+    :return: the table with empty bounding boxes removed, and areas filled using the bounding box area.
+    """
     table.dropna(subset=['lat_min', 'lat_max', 'lon_min', 'lon_max'], how='any', inplace=True)
 
     areas = pd.Series(index=table.index,
@@ -118,7 +127,15 @@ def _coords(row):
 # based on sgillies answer on SO:
 # https://stackoverflow.com/a/4683144
 # calculates the area using an equal area projection centered on the polygon
-def calculate_area(row):
+def calculate_area(row: pd.Series) -> float:
+    """
+    Calculate the bounding box area using an equal-area projection centered on the bounding box.
+
+    Based on answer by user sgillies on StackOverflow: https://stackoverflow.com/a/4683144
+
+    :param row: a row from a talbe that contains 'lat_min', 'lat_max', 'lon_min', and 'lon_max' columns
+    :return: the calculated area
+    """
     coords = _coords(row)
 
     lon, lat = zip(*coords)
@@ -137,7 +154,14 @@ def calculate_area(row):
         return shape(poly).area
 
 
-def expand_study_areas(geo, data):
+def expand_study_areas(geo: pd.DataFrame, data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Ensure that the geographic table and the dataset table loaded by load_dataset() have a geometry for each dataset.
+
+    :param geo: the geographic table, as loaded by load_dataset()
+    :param data: the datasets table, as loaded by load_dataset()
+    :return: the expanded geographic table
+    """
 
     has_dataset = geo.dropna(subset=['DatasetKey'])
     no_dataset = geo.drop(has_dataset.index)
@@ -163,7 +187,13 @@ def expand_study_areas(geo, data):
 # c) Calculate the inverse of that number.
 
 # formula --> microns per dot= 25,400 microns / DPI as There are 25,400 microns in an inch.
-def microns_to_dpi(micrometer):
+def microns_to_dpi(micrometer: float) -> float:
+    """
+    Convert from microns (µm) to dots per inch (dpi).
+
+    :param micrometer: the measurement in microns
+    :return: the measurement in dpi
+    """
     dpi_conversion_factor = 25400  # 1 inch = 25,400 micrometers
     return dpi_conversion_factor / micrometer if micrometer is not None and micrometer > 0 else np.nan
 
@@ -191,7 +221,18 @@ def bar_text(ax, bar, label):
     return ax
 
 
-def accuracy_measures(table):
+def accuracy_measures(table: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate the "avg" accuracy measure for a dataset, in order to be able to compare different measures:
+
+    - if 3D (XYZ) is reported, use that
+    - if X, Y, Z are reported individually, or if XY, Z are reported individually, add in quadrature
+    - if only XY or X, Y values are reported, take sqrt(2) times the XY value
+    - if only Z is reported, take sqrt(3) times the Z value
+
+    :param table: the accuracy table, as loaded by load_dataset()
+    :return: the accuracy table, with the avg accuracy measures filled in
+    """
     # source accuracy, gcp residuals, cp residuals, comparison accuracy, comparison residuals
     fields = ['Ground control accuracy [m]', 'Residuals to GCPs [m]', 'Residuals to CPs [m]',
               'Accuracy comparison data [m]', 'Residuals to comparison [m]']

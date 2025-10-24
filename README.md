@@ -40,7 +40,7 @@ This repository contains the database created as part of the review, in both SQL
 
 The database has the following structure:
 
-![Database](figures/database_diagram.png)
+![Database](figures/FigA4_DatabaseDiagram.png)
 *Database tables, data types, and links. Bold text indicates a key. For a complete description of each table and
 field in the database, see Table A1.*
 

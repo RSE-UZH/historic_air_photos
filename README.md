@@ -1,7 +1,6 @@
 # Unlocking the Past: A Review of Historical Aerial and Satellite Stereo-Imagery for Geoscience Applications
 
-Paper DOI: 
-Dataset DOI: 
+[![DOI](https://zenodo.org/badge/485547421.svg)](https://zenodo.org/badge/latestdoi/485547421)
 
 ## abstract
 
@@ -13,9 +12,10 @@ mapping purposes, the stereoscopic nature of historical images offers a unique p
 changes across the 20th century. Recent advances in photogrammetry and computer vision have greatly enhanced this
 potential.
 
-Despite the early recognition of their value, these datasets remain underexploited due to challenges related to 1)
-fragmented and inaccessible archives, 2) digitisation and associated costs, and 3) a lack of scalable, automated 
-processing solutions.
+Despite the early recognition of their value, these datasets remain underexploited due to challenges related to:
+  1) fragmented and inaccessible archives,
+  2) digitisation and associated costs, and
+  3) a lack of scalable, automated processing solutions.
 
 This review addresses these challenges by analysing 198 studies that digitally process historical aerial and satellite
 stereo imagery for orthoimage and DEM generation. We provide an overview of accessed archives, processing strategies, 
